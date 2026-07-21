@@ -1,0 +1,87 @@
+/* ════════════════════════════════════════════════════════════════════
+ * Operator surfaces only (admin console + sunflower desktop).
+ *
+ * shadcn-convention token names (--background / --foreground / --primary /
+ * --sidebar / --muted-foreground / …) are the shadcn primitives' NATIVE
+ * vocabulary, sourced from the 赚钱所 palette (--color-*) so there is ONE
+ * source of truth and zero drift — including dark, which arrives for free:
+ * these are lazy var() aliases, so re-pointing --color-* under
+ * [data-theme=dark] re-points every name below with them.
+ *
+ * Components keep the STANDARD shadcn look/sizing; we only point the design
+ * tokens at the 赚钱所 palette. The nav rail's active/hover states are the
+ * stock shadcn ones — they read as a 朱砂 pill purely because
+ * --sidebar-accent is themed to --color-primary-soft below. No bespoke
+ * [data-slot] overrides.
+ *
+ * Import order in each operator app's globals.css (AFTER tailwindcss):
+ *   tokens.css → base.css → jiedusuo.css → operator.css   (this file LAST)
+ * The public newsprint site never imports this file, so newsprint is
+ * untouched.
+ * ════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* base surface / text */
+    --background: var(--color-paper);
+    --foreground: var(--color-ink);
+    --card: var(--color-paper);
+    --card-foreground: var(--color-ink);
+    --popover: var(--color-paper);
+    --popover-foreground: var(--color-ink);
+
+    /* primary itself already exists as the Tailwind colour --color-primary;
+     * only its foreground is new here. */
+    --primary-foreground: #ffffff;
+    --secondary: var(--color-paper-2);
+    --secondary-foreground: var(--color-ink);
+    --muted-foreground: var(--color-muted);
+    --accent: var(--color-paper-2);
+    --accent-foreground: var(--color-ink);
+    --destructive: var(--color-negative);
+    --border: var(--color-rule-soft);
+    --input: var(--color-rule-soft);
+    --ring: var(--color-primary);
+
+    /* sidebar (nav rail). --sidebar-accent is the accent tint so the stock
+     * SidebarMenuButton active/hover (bg-sidebar-accent) reads as a 朱砂
+     * pill — no custom rule needed. */
+    --sidebar: var(--color-paper);
+    --sidebar-foreground: var(--color-ink);
+    --sidebar-primary: var(--color-primary);
+    --sidebar-primary-foreground: #ffffff;
+    --sidebar-accent: var(--color-primary-soft);
+    --sidebar-accent-foreground: var(--color-primary);
+    --sidebar-border: var(--color-rule-soft);
+    --sidebar-ring: var(--color-primary);
+}
+
+/* Register the shadcn token names as Tailwind v4 utilities (bg-sidebar,
+ * text-muted-foreground, border-input, …). ONLY new names — never
+ * re-declare the existing --color-primary / --color-muted / --color-ink,
+ * which keep their meaning for the legacy --color-* utilities. */
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+}

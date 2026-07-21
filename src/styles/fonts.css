@@ -1,0 +1,34 @@
+/* Jiedusuo DS — @font-face registration for the token font families.
+ *
+ * tokens.css names three families no repo stylesheet used to register
+ * (design-handoff PART A1):
+ *   --font-sans     → "Source Sans 3 Variable"
+ *   --font-display  → "Playfair Display Variable"
+ *   --font-serif-cn → "Noto Serif SC"
+ * This sheet is the package-owned registration for them. The fontsource
+ * variable packages register exactly the "<Family> Variable" names the
+ * tokens ask for, with a font-weight RANGE and font-display: swap; the
+ * static Noto Serif SC weights each ship ~100 unicode-range CJK subsets,
+ * so a page only fetches the slices it paints.
+ *
+ * Import it once, BEFORE tokens.css, from a consumer that renders the
+ * token families as written (e.g. the upcoming desktop client shell).
+ * Surfaces that re-point the font tokens at their own faces (the public
+ * site's newsprint overlay, the jiedusuo.css operator skin, desktop/ui's
+ * host-CJK override) don't need it and shouldn't pay its weight — which
+ * is why tokens.css does not pull it in.
+ *
+ * The design-sync bundle receives the same files through cfg.extraFonts
+ * (.design-sync/config.json), not through this sheet.
+ */
+
+/* "Source Sans 3 Variable" — wght 200–900 variable axis. */
+@import "@fontsource-variable/source-sans-3/wght.css";
+/* "Playfair Display Variable" — wght 400–900 variable axis. */
+@import "@fontsource-variable/playfair-display/wght.css";
+/* "Noto Serif SC" (思源宋体) — the static weights the components render:
+ * 400 body / 600 semibold / 700 bold / 900 hero-black. */
+@import "@fontsource/noto-serif-sc/400.css";
+@import "@fontsource/noto-serif-sc/600.css";
+@import "@fontsource/noto-serif-sc/700.css";
+@import "@fontsource/noto-serif-sc/900.css";

@@ -1,0 +1,669 @@
+/* ════════════════════════════════════════════════════════════════════
+ * 赚钱所 — the operator skin (admin console + sunflower desktop)
+ *
+ * Named for the product, not for a reference: this used to be `stripe.css`,
+ * and it was accurate only while the palette was Stripe's violet. It carries
+ * our own accent, our own dark, our own status duet now — what remains of the
+ * Stripe lineage is the GRAMMAR (hairlines over heavy rules, soft layered
+ * elevation, restrained rounding), and a grammar is not a name.
+ *
+ * Imported LAST from each operator app's `app/globals.css`, AFTER tokens.css
+ * + base.css, and sitting OUTSIDE any @layer — so it wins over ui-system's
+ * `@layer components` Wired defaults (.btn / .chip / .section-head /
+ * .data-table / …) regardless of source order. The public newsprint site does
+ * NOT import this file (it has its own newsprint.css remap), so it is
+ * untouched — newsprint is this file's sibling, not its parent.
+ *
+ * The look: deep-navy ink on a soft #f6f8fb canvas, ONE accent — 朱砂
+ * #c1272d, the same brand accent the public site carries — white surfaces
+ * with a 1px hairline + soft layered shadow, gentle rounding (4 / 6 / 8,
+ * pills 999), Manrope for text + Geist Mono for machine literals. Status
+ * stays a coloured dot + word (ok green / negative red / warn amber) —
+ * semantics never ride the accent.
+ *
+ * Light and dark are co-equal: the `[data-theme=dark]` block at the foot of
+ * this palette re-points every colour token. A surface that never sets the
+ * attribute simply never sees it.
+ * ════════════════════════════════════════════════════════════════════ */
+
+:root {
+    /* ── Palette ──────────────────────────────────────────────────── */
+    /* Page canvas is a soft cool grey-blue; surfaces (cards/inputs) stay
+     * white so they lift off the canvas. (Wired had it inverted — white
+     * page, grey cards.) The canvas itself is applied on <body> below. */
+    --color-canvas: #f6f8fb;
+    --color-paper: #ffffff;
+    --color-paper-2: #f1f4f9;
+    --color-paper-3: #e7ecf3;
+
+    /* Deep-navy ink duet. */
+    --color-ink: #061b31;
+    --color-muted: #50617a;
+    --color-dim: #8a98ad;
+
+    /* Rules: soft hairline is the default divider; the "emphasis" rule is
+     * no longer true-black — Stripe leans on hairlines, not heavy bars. */
+    --color-rule: #cdd7e3;
+    --color-rule-soft: #e5edf5;
+
+    /* The single chromatic accent — 朱砂, shared with the public site. */
+    --color-primary: #c1272d;
+    --color-primary-2: #9e1f24;
+    --color-primary-soft: #fbecec;
+    --color-accent-ring: rgb(193 39 45 / 0.22);
+
+    /* Inline links ride the accent (Stripe has no separate link blue). */
+    --color-link: #c1272d;
+
+    /* Status — semantic, kept OFF the accent. */
+    --color-ok: #1a9d6b;
+    --color-ok-2: #157a53;
+    --color-negative: #df1b41;
+    --color-negative-2: #b3162f;
+    --color-ochre: #b1640a;
+
+    /* Tints (translucent washes) re-pointed at the accent. */
+    --color-tint-primary: rgb(193 39 45 / 0.08);
+    --color-tint-negative: rgb(223 27 65 / 0.1);
+
+    /* ── Typography — Manrope everywhere, Geist Mono for literals ──── */
+    --font-display:
+        "Manrope Variable", "Manrope", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    --font-sans:
+        "Manrope Variable", "Manrope", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+    /* --font-sans stays the proportional micro-label alias (Manrope here). */
+    /* The Chinese display face is no longer a serif under Stripe. */
+    --font-serif-cn: "Manrope Variable", "Manrope", "Noto Sans SC", system-ui, sans-serif;
+    /* --font-code (Geist Mono) is inherited from tokens.css unchanged. */
+
+    /* Uppercase eyebrows want a touch less tracking than the Wired caps. */
+    --tracking-caps: 0.08em;
+    --tracking-caps-loose: 0.1em;
+    --tracking-caps-x-loose: 0.12em;
+
+    /* ── Radius ───────────────────────────────────────────────────── */
+    --radius-sm: 4px;
+    --radius: 6px;
+    --radius-lg: 8px;
+
+    /* ── Elevation — soft, layered, navy-tinted ───────────────────── */
+    --shadow-sm: 0 1px 1px rgb(6 27 49 / 0.04), 0 1px 2px rgb(6 27 49 / 0.06);
+    --shadow-card: 0 1px 2px rgb(6 27 49 / 0.04), 0 4px 12px rgb(6 27 49 / 0.05);
+    --shadow-pop: 0 8px 16px -4px rgb(6 27 49 / 0.1), 0 16px 32px -8px rgb(6 27 49 / 0.12);
+    /* Legacy Wired shadow vars now carry the soft elevation so any
+     * component still referencing them lifts instead of flattening. */
+    --shadow-brutal: var(--shadow-card);
+    --shadow-brutal-sm: var(--shadow-sm);
+    --brutal-shadow: var(--shadow-card);
+    --brutal-shadow-sm: var(--shadow-sm);
+
+    /* Themed control/surface knobs — Stripe values (Wired defaults live in
+     * tokens.css). Components read these via arbitrary-value utilities so the
+     * re-skin is one token flip, not a per-component rewrite. */
+    --radius-control: var(--radius);
+    --radius-surface: var(--radius-lg);
+    --btn-primary-bg: var(--color-primary);
+    --btn-primary-fg: #ffffff;
+    --elevation-card: var(--shadow-card);
+    --elevation-control: var(--shadow-sm);
+
+    /* Soften the "thick" editorial rule (footer top border, etc.) to a
+     * hairline — Stripe leans on hairlines, not 3px bars. */
+    --border-rule-thick: 1px;
+
+    /* Motion: Stripe's signature ease. */
+    --ease-wire: cubic-bezier(0.25, 1, 0.5, 1);
+
+    /* ── Sunflower-desktop redesign additions ─────────────────────── *
+     * The Stripe prototype look needs a few tokens the base overlay
+     * lacks. ALL ADDITIVE — no existing token changes — so admin (which
+     * also imports this file) is unaffected; it simply never reads them.
+     * The desktop page classes (globals.css) reference these by name. */
+    --radius-xl: 12px; /* prototype card / modal radius */
+    --color-rule-softer: #eef3f8; /* lighter than --color-rule-soft: row sub-rules */
+    --color-meta: #64748d; /* middle grey rank (ink > muted > meta > dim) */
+    --color-ochre-2: #8a4e08; /* ochre ink (the darker rank, as ok-2 / negative-2) */
+    --color-negative-border: #f3c6cf;
+
+    /* Status tints. tokens.css leaves these on the Wired olive/rust duet, which
+     * turns an "ok" chip GREY-GREEN under this skin — re-point the canonical
+     * names at the actual status hues. The reversed spellings below are the
+     * older alias the desktop stylesheet is written against; they now forward
+     * here so there is one definition, not two. */
+    --color-tint-ok: rgb(26 157 107 / 0.11);
+    --color-tint-ok-ink: var(--color-ok-2);
+    --color-tint-warn: rgb(177 100 10 / 0.1);
+    --color-tint-warn-ink: var(--color-ochre-2);
+    --color-ok-tint: var(--color-tint-ok);
+    --color-warn-tint: var(--color-tint-warn);
+    --color-warn: var(--color-ochre); /* warn == the ochre status tone */
+    --color-warn-2: var(--color-ochre-2);
+    /* Chart EMA stroke trio (confirm-gate + strategy-preview candles). */
+    --ema-9: #533afd;
+    --ema-20: #2bb8e6;
+    --ema-50: #8a98ad;
+    /* Desktop sidebar rail width. */
+    --rail-w: 14rem;
+}
+
+/* ── Dark ────────────────────────────────────────────────────────────
+ * Token-paired against the light palette above: same names, same roles,
+ * never a new colour concept. Only re-points colour — radius, elevation
+ * geometry, type and motion are theme-independent, so they stay above.
+ *
+ * Opt-in per surface: an app sets data-theme="dark" on <html> (the admin
+ * console follows prefers-color-scheme and lets the operator override).
+ * A surface that never sets it never sees this block. */
+[data-theme="dark"] {
+    --color-canvas: #0a1420;
+    --color-paper: #0f1e2e;
+    --color-paper-2: #16283a;
+    --color-paper-3: #1d3145;
+
+    --color-ink: #e8eef6;
+    --color-muted: #9fb0c4;
+    --color-dim: #647689;
+    --color-meta: #7e8fa4;
+
+    --color-rule: #2b3f55;
+    --color-rule-soft: #1f3245;
+    --color-rule-softer: #18293a;
+
+    /* The accent lightens for AA against the dark canvas. */
+    --color-primary: #e2504f;
+    --color-primary-2: #ef6b68;
+    --color-primary-soft: #2b1618;
+    --color-accent-ring: rgb(226 80 79 / 0.28);
+    --color-link: #e2504f;
+
+    --color-ok: #2fbd86;
+    --color-ok-2: #4ed6a0;
+    --color-negative: #f2506b;
+    --color-negative-2: #f87187;
+    --color-negative-border: #5a2434;
+    --color-ochre: #d6923e;
+    --color-ochre-2: #e8ab5f;
+
+    /* Tints wash the surface UP in dark, not down. The reversed-spelling
+     * aliases forward, exactly as in the light block. */
+    --color-tint-surface: rgb(255 255 255 / 0.05);
+    --color-tint-primary: rgb(226 80 79 / 0.14);
+    --color-tint-negative: rgb(242 80 107 / 0.14);
+    --color-tint-ok: rgb(47 189 134 / 0.14);
+    --color-tint-warn: rgb(214 146 62 / 0.14);
+
+    /* Elevation reads as depth, not haze: black, and deeper. */
+    --shadow-sm: 0 1px 1px rgb(0 0 0 / 0.3), 0 1px 2px rgb(0 0 0 / 0.36);
+    --shadow-card: 0 1px 2px rgb(0 0 0 / 0.32), 0 4px 12px rgb(0 0 0 / 0.4);
+    --shadow-pop: 0 8px 16px -4px rgb(0 0 0 / 0.46), 0 16px 32px -8px rgb(0 0 0 / 0.54);
+}
+
+/* Soft canvas under everything; surfaces lift off it. */
+html,
+body {
+    background: var(--color-canvas);
+}
+
+/* Accent focus ring instead of the hard ink outline. */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px var(--color-accent-ring);
+    border-radius: var(--radius-sm);
+}
+::selection {
+    background: var(--color-primary-soft);
+    color: var(--color-primary-2);
+}
+
+/* ── Section head → hairline, Manrope, no heavy bar ────────────────── */
+.section-head {
+    border-bottom: 1px solid var(--color-rule-soft);
+    padding-bottom: 0.5rem;
+}
+.section-head--sub {
+    border-bottom: 0;
+}
+/* The Wired base uppercases both of these lines. On the operator surfaces they
+ * carry Chinese with a machine literal inside (「每 30s 安静刷新」), where the
+ * transform does nothing to the Han and mangles the literal into 30S. */
+.section-meta,
+.ui-page-meta {
+    text-transform: none;
+}
+.section-meta {
+    color: var(--color-dim);
+    letter-spacing: var(--tracking-caps-loose);
+}
+
+/* ── Data table → hairline header, roomy rows ──────────────────────── */
+.data-table th {
+    border-bottom: 1px solid var(--color-rule);
+    color: var(--color-muted);
+}
+.data-table td {
+    border-bottom: 1px solid var(--color-rule-soft);
+}
+
+/* ── Buttons → rounded, hairline, soft elevation, fill-accent primary ─ */
+.btn {
+    font-family: var(--font-sans);
+    font-size: 0.9643rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius);
+    background: var(--color-paper);
+    color: var(--color-ink);
+    box-shadow: var(--shadow-sm);
+    transition:
+        background var(--motion-fast) var(--ease-wire),
+        border-color var(--motion-fast) var(--ease-wire),
+        color var(--motion-fast) var(--ease-wire);
+}
+.btn:hover {
+    background: var(--color-paper-2);
+    color: var(--color-ink);
+    border-color: var(--color-dim);
+}
+.btn:active {
+    transform: translateY(0.5px);
+}
+.btn--primary {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: transparent;
+}
+.btn--primary:hover {
+    background: var(--color-primary-2);
+    color: #fff;
+    border-color: transparent;
+}
+.btn--ghost {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+.btn--ghost:hover {
+    background: var(--color-primary-soft);
+    color: var(--color-primary-2);
+    border-color: transparent;
+}
+.btn--small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    border-radius: var(--radius-sm);
+}
+
+/* ── <Button> component (ui-btn hook) → rounded, soft, accent primary ─ *
+ * The CVA button ships Tailwind utilities (border-ink / bg-ink / …); these
+ * unlayered rules win over @layer utilities and re-skin it for admin+desktop
+ * only. Variant hooks: default · ghost · primary · stop · serif ·
+ * serifPrimary · serifGhost. */
+.ui-btn {
+    border-radius: var(--radius-control);
+    box-shadow: var(--elevation-control);
+    transition:
+        background var(--motion-fast) var(--ease-wire),
+        border-color var(--motion-fast) var(--ease-wire),
+        color var(--motion-fast) var(--ease-wire),
+        box-shadow var(--motion-fast) var(--ease-wire);
+}
+.ui-btn--default,
+.ui-btn--serif,
+.ui-btn--ghost,
+.ui-btn--serifGhost {
+    background: var(--color-paper);
+    border-color: var(--color-rule);
+    color: var(--color-ink);
+}
+.ui-btn--default:hover,
+.ui-btn--serif:hover,
+.ui-btn--ghost:hover,
+.ui-btn--serifGhost:hover {
+    background: var(--color-paper-2);
+    border-color: var(--color-dim);
+    color: var(--color-ink);
+}
+.ui-btn--ghost,
+.ui-btn--serifGhost {
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+}
+.ui-btn--ghost:hover,
+.ui-btn--serifGhost:hover {
+    background: var(--color-primary-soft);
+    color: var(--color-primary-2);
+    border-color: transparent;
+}
+.ui-btn--primary,
+.ui-btn--serifPrimary {
+    background: var(--color-primary);
+    border-color: transparent;
+    color: #fff;
+}
+.ui-btn--primary:hover,
+.ui-btn--serifPrimary:hover {
+    background: var(--color-primary-2);
+    border-color: transparent;
+    color: #fff;
+}
+.ui-btn--stop {
+    background: var(--color-paper);
+    border-color: var(--color-negative);
+    color: var(--color-negative);
+}
+.ui-btn--stop:hover {
+    background: var(--color-negative);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* ── Chips → rounded soft tags, accent default ─────────────────────── */
+.chip {
+    border: 1px solid var(--color-rule);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    color: var(--color-ink);
+    background: var(--color-paper);
+}
+.chip--solid,
+.chip--primary {
+    background: var(--color-primary);
+    color: #fff;
+    border-color: transparent;
+}
+.chip--mode {
+    background: var(--color-paper-2);
+    border-color: var(--color-rule-soft);
+    color: var(--color-muted);
+}
+.chip--tint-ok {
+    background: rgb(26 157 107 / 0.1);
+    color: var(--color-ok-2);
+    border-color: rgb(26 157 107 / 0.3);
+}
+.chip--tint-warn {
+    background: var(--color-tint-negative);
+    color: var(--color-negative-2);
+    border-color: rgb(223 27 65 / 0.3);
+}
+
+/* ── KV grid → white card, hairline frame, rounded ─────────────────── */
+.kv-grid {
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-soft);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+.kv {
+    border-right: 1px solid var(--color-rule-soft);
+}
+.kv-label {
+    color: var(--color-muted);
+    font-weight: 600;
+}
+
+/* ── Inline status → rounded card, accent bar ──────────────────────── */
+.inline-status {
+    border: 1px solid var(--color-rule-soft);
+    border-left: 2px solid var(--color-primary);
+    border-radius: var(--radius);
+    background: var(--color-paper);
+    box-shadow: var(--shadow-sm);
+}
+.inline-status--ok {
+    color: var(--color-ok-2);
+    border-color: var(--color-rule-soft);
+    border-left-color: var(--color-ok);
+}
+.inline-status--err {
+    color: var(--color-negative-2);
+    border-color: var(--color-rule-soft);
+    border-left-color: var(--color-negative);
+}
+
+/* ── Inputs / selects / textareas → rounded, soft, accent focus ────── */
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+select,
+textarea {
+    border-radius: var(--radius-sm);
+}
+
+/* ── Form controls (ui-control hook on Field <Input>/<Textarea> + the
+ *    masked <SecretField>) → rounded, hairline frame, accent focus ring.
+ *    The Wired render ships a hard ink box + inset ink focus outline; these
+ *    unlayered rules round it, soften the border to a hairline, and swap the
+ *    focus to the soft accent ring — admin+desktop only. ──────────────── */
+.ui-control {
+    border-radius: var(--radius-control);
+    border-color: var(--color-rule);
+    background: var(--color-paper);
+    box-shadow: var(--elevation-control);
+    transition:
+        border-color var(--motion-fast) var(--ease-wire),
+        box-shadow var(--motion-fast) var(--ease-wire);
+}
+.ui-control:focus,
+.ui-control:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-accent-ring);
+}
+
+/* The reveal toggle beside a SecretField → match the rounded hairline button. */
+.ui-secret-reveal {
+    border-radius: var(--radius-control);
+    border-color: var(--color-rule);
+    background: var(--color-paper);
+}
+.ui-secret-reveal:hover {
+    background: var(--color-primary-soft);
+    border-color: var(--color-primary);
+    color: var(--color-primary-2);
+}
+
+/* The bottom-line mono <LineInput> → keep the underline idiom but round the
+ * top corners, soften the rule, and accent the focus line. */
+.ui-lineinput {
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border-bottom-color: var(--color-rule);
+    transition: border-color var(--motion-fast) var(--ease-wire);
+}
+.ui-lineinput:focus,
+.ui-lineinput:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-primary);
+    box-shadow: 0 1px 0 0 var(--color-primary);
+}
+
+/* ── Modal (ui-modal on .dialog) → rounded surface, soft pop shadow,
+ *    hairline frame; header bar loses the 2px ink rule for a hairline. ─── */
+.ui-modal {
+    border-radius: var(--radius-surface);
+    border: 1px solid var(--color-rule-soft);
+    box-shadow: var(--shadow-pop);
+    overflow: hidden;
+}
+.ui-modal-head {
+    border-bottom: 1px solid var(--color-rule-soft);
+    background: var(--color-paper);
+}
+.ui-modal-close {
+    border-radius: var(--radius-control);
+    border-color: var(--color-rule);
+}
+.ui-modal-close:hover {
+    background: var(--color-primary);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* ── NoticeBox (ui-notice) → rounded card, soft shadow, hairline frame, a
+ *    semantic left bar instead of the full 2px coloured frame + filled band.
+ *    The band loses its solid fill (becomes a tinted hairline header). ─── */
+.ui-notice {
+    border-width: 1px;
+    border-color: var(--color-rule-soft);
+    border-left-width: 3px;
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+.ui-notice--danger {
+    border-left-color: var(--color-negative);
+}
+.ui-notice--primary {
+    border-left-color: var(--color-primary);
+}
+.ui-notice--neutral {
+    border-left-color: var(--color-rule);
+}
+.ui-notice-band {
+    background: var(--color-paper) !important;
+    border-bottom: 1px solid var(--color-rule-soft);
+}
+.ui-notice--danger .ui-notice-band {
+    color: var(--color-negative-2) !important;
+}
+.ui-notice--primary .ui-notice-band {
+    color: var(--color-primary-2) !important;
+}
+.ui-notice--neutral .ui-notice-band {
+    color: var(--color-ink) !important;
+}
+/* The square mark glyph → inherit the band tone, lose the inverted box. */
+.ui-notice-mark {
+    border-radius: var(--radius-sm);
+    border-color: currentColor !important;
+    color: inherit !important;
+}
+
+/* ── StatusStrip (ui-statusstrip) → hairline bottom rule, no 2px bar. ──── */
+.ui-statusstrip {
+    border-bottom: 1px solid var(--color-rule-soft);
+    background: var(--color-paper);
+}
+
+/* ── StatusBox (ui-statusbox, the CVA InlineStatus) → rounded card, soft
+ *    shadow, hairline frame + a thicker semantic left bar. ───────────── */
+.ui-statusbox {
+    border-radius: var(--radius);
+    border-width: 1px;
+    border-left-width: 3px;
+    border-color: var(--color-rule-soft);
+    box-shadow: var(--shadow-sm);
+}
+.ui-statusbox--default {
+    border-left-color: var(--color-primary);
+}
+.ui-statusbox--ok {
+    border-left-color: var(--color-ok);
+}
+.ui-statusbox--err {
+    border-left-color: var(--color-negative);
+}
+.ui-statusbox--warn {
+    border-left-color: var(--color-ochre);
+}
+
+/* ── Switch (ui-switch-track / ui-switch-thumb) → vermilion ON track,
+ *    rounded. The base render fills ink when on; re-point ON to the accent. */
+.ui-switch-track {
+    border-radius: 999px;
+}
+.ui-switch-track[data-on="true"] {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+}
+.ui-switch-thumb {
+    border-radius: 999px;
+}
+
+/* ── SectionCard (ui-sectioncard) → white surface card, rounded, soft
+ *    elevation, hairline frame; header bar gets a hairline rule. ──────── */
+.ui-sectioncard {
+    background: var(--color-paper);
+    border: 1px solid var(--color-rule-soft);
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+.ui-sectioncard:last-child {
+    margin-bottom: 0;
+}
+.ui-sectioncard-head {
+    border-bottom: 1px solid var(--color-rule-soft);
+    background: var(--color-paper-2);
+}
+
+/* ── EmptyStatePanel (ui-card) → white surface card, rounded, soft frame. ─ */
+.ui-card {
+    background: var(--color-paper);
+    border-color: var(--color-rule-soft);
+    border-radius: var(--radius-surface);
+    box-shadow: var(--shadow-card);
+}
+
+/* ── ActionLink (ui-actionlink) → accent CTA instead of the ink block. ── */
+.ui-actionlink {
+    border-radius: var(--radius-control);
+    background: var(--color-primary) !important;
+    border-color: transparent !important;
+    box-shadow: var(--elevation-control);
+}
+.ui-actionlink:hover {
+    background: var(--color-primary-2) !important;
+    border-color: transparent !important;
+}
+
+/* ── SideNav (ui-sidenav) → active item is a rounded accent pill (soft
+ *    accent fill + accent text), not a left ink bar; numerals muted. ──── */
+.ui-sidenav-item {
+    border-radius: var(--radius);
+    border-left-color: transparent !important;
+    transition:
+        background var(--motion-fast) var(--ease-wire),
+        color var(--motion-fast) var(--ease-wire);
+}
+.ui-sidenav-item:hover {
+    background: var(--color-paper-2);
+}
+.ui-sidenav-item[data-active="true"] {
+    background: var(--color-primary-soft) !important;
+    color: var(--color-primary) !important;
+}
+.ui-sidenav-num {
+    color: var(--color-dim);
+}
+.ui-sidenav-item[data-active="true"] .ui-sidenav-num {
+    color: var(--color-primary) !important;
+}
+
+/* ── AuthorSplitChip (ui-authorsplit) → round the split box/name pair so the
+ *    paired control reads as one rounded segmented control. ──────────── */
+.ui-authorsplit .author-split-box {
+    border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+    border-color: var(--color-rule);
+}
+.ui-authorsplit .author-split-name {
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    border-color: var(--color-rule);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn {
+        transition: none;
+    }
+}

@@ -1,0 +1,233 @@
+/* Jiedusuo design tokens — Tailwind v4 @theme entries.
+ *
+ * Import this once from each app's globals.css. Components in
+ * `@jiedusuo/ui-system` reach for these via Tailwind classes
+ * (text-ink / bg-paper / font-display / …); only the few legacy
+ * component classes in base.css use the raw CSS variables.
+ *
+ * The palette is "Wired" editorial — strict black-on-white duet:
+ *   - black (#000) is the single ink/accent; the brand has NO chromatic accent
+ *   - inline text links are the only blue (--color-link #057dbc)
+ *   - vermilion / brick-red is reserved for losses + errors (semantic)
+ *   - gain green / amber are SEMANTIC status only — never chrome
+ *   - amber sun is the LOGO ONLY — never status
+ *   - paper is white; canvas-soft is neutral cool grey; dividers are hairline
+ */
+
+@theme {
+  /* ── Paper / surfaces ─────────────────────────────────────────── */
+  /* White canvas/paper; canvas-soft is a neutral cool grey wash. */
+  /* `canvas` is the page ground BEHIND the paper surfaces; on the Wired
+   * base the two coincide, and each theme overlay pulls them apart. */
+  --color-canvas: #ffffff;
+  --color-paper: #ffffff;
+  --color-paper-2: #f5f5f5;
+  --color-paper-3: #efefef;
+
+  /* Ink-tinted wash for a hovered/selected row. Distinct from the tints
+   * below: those carry a semantic hue, this one is pure surface feedback
+   * and is the only tint allowed on a message row. */
+  --color-tint-surface: rgb(0 0 0 / 0.04);
+
+  /* ── Ink ──────────────────────────────────────────────────────── */
+  --color-ink: #000000;
+  --color-muted: #757575;
+  --color-dim: #999999;
+
+  /* ── Rules ────────────────────────────────────────────────────── */
+  /* Ink rule = true black for emphasis; soft rule = neutral hairline. */
+  --color-rule: #000000;
+  --color-rule-soft: #e0e0e0;
+
+  /* ── Primary / accent (Wired: black, NO chromatic accent) ─────── *
+   * The brand has no colour accent. Primary is black; the secondary
+   * is a near-black for the rare two-tone treatment. */
+  --color-primary: #000000;
+  --color-primary-2: #1a1a1a;
+  --color-primary-soft: #f5f5f5;
+
+  /* ── Inline text link (ONLY for inline links, never buttons/nav) ─ */
+  --color-link: #057dbc;
+
+  /* ── Negative (losses / errors / skipped) ─────────────────────── */
+  --color-negative: #b14a3a;
+  --color-negative-2: #8e3a2c;
+
+  /* ── Status tones (kept SEPARATE from --color-primary) ──────────── *
+   * --color-primary is the app accent and gets re-themed per surface
+   * (sage in admin/desktop, vermilion in the public site + x-forwarder).
+   * Status semantics must NOT ride on it: a "connected / resolved" badge
+   * has to read green even where the accent is red. These two are the
+   * stable green/amber the newsprint controls (validation chips, mode
+   * tags) lean on. */
+  --color-ok: #2f6f3f;          /* connected / resolved / forwarding */
+  --color-ok-2: #245733;
+  --color-ochre: #c08a2e;       /* pending / awaiting-verification */
+
+  /* ── Sun (LOGO ONLY) ──────────────────────────────────────────── */
+  --color-sun: #d99a1a;
+  --color-sun-2: #b67d10;
+  --color-sun-ring: #efc863;
+
+  /* ── Data-viz indicator strokes (admin charts; ≥2 uses each) ───── */
+  --color-signal: #8b5cf6;   /* MACD signal + secondary entry marker (4 uses) */
+  --color-rsi:    #0f766e;   /* RSI line (2 uses) */
+
+  /* ── Chart up/down series fills (admin candle/macd; semantic, not -primary) */
+  --color-gain:   #148451;   /* candle-up / macd-up / pnl-up — 3+ uses */
+  --color-loss:   #b4232a;   /* candle-down / macd-down / pnl-down / expiry-warn / flag-warn — 5+ uses */
+
+  /* ── Uptime client series palette (site uptime chart; 8 fixed slots) ─ */
+  --color-series-0: #2f6f3f;
+  --color-series-1: #c08a2e;
+  --color-series-2: #2f6f74;
+  --color-series-3: #9b4a38;
+  --color-series-4: #6c5aa7;
+  --color-series-5: #7a6a33;
+  --color-series-6: #4b7f8e;
+  --color-series-7: #a05d8f;
+
+  /* ── Tints (translucent washes) ───────────────────────────────── */
+  --color-tint-primary: rgb(0 0 0 / 0.06);
+  --color-tint-negative: rgb(177 74 58 / 0.12);
+  --color-tint-ok: rgb(120 110 40 / 0.18);
+  --color-tint-ok-ink: #5e5818;
+  --color-tint-warn: rgb(193 100 39 / 0.18);
+  --color-tint-warn-ink: #7a4517;
+
+  /* ── Scrim (modal/lightbox backdrop; theme-agnostic black) ──────── */
+  --color-overlay-strong: rgb(0 0 0 / 0.82);
+
+  /* ── Terminal / log surface (dark, theme-agnostic) ──────────────── *
+   * The run-log pre stays a dark console in every theme — exposes
+   * bg-log / text-log-ink utilities. */
+  --color-log: #14130f;
+  --color-log-ink: #cfe8d4;
+
+  /* ── Typography ───────────────────────────────────────────────── *
+   * Adobe Source family across the board, self-hosted via fontsource
+   * in each app (no Google Fonts hop at runtime). Chinese characters
+   * fall through to Noto Serif/Sans SC, which IS Source Han Serif/Sans
+   * upstream — same files, different naming.                          */
+  --font-display: "Playfair Display Variable", "Playfair Display",
+                  "Source Serif 4 Variable", "Noto Serif SC",
+                  "Songti SC", serif;
+  --font-serif-cn: "Noto Serif SC", "Source Serif 4 Variable",
+                   "Source Serif 4", "Songti SC", serif;
+  --font-sans: "Source Sans 3 Variable", "Source Sans 3",
+               "Noto Sans SC", system-ui, sans-serif;
+  /* The ONLY monospace face — Geist Mono. Use it for every MACHINE LITERAL
+   * (ip / git sha / fingerprint / json / email / id / wxid / file path /
+   * token / contract id). The uppercase micro-label grammar (.caps-label /
+   * .caps-meta, chip / kv / section-kicker labels) is NOT monospace — it is
+   * the sans face plus the `--tracking-caps*` ladder, which is why those
+   * labels carry no font token of their own. */
+  --font-code: "Geist Mono Variable", "Geist Mono",
+               "Source Code Pro Variable", "Source Code Pro",
+               "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  /* ── Tracking (uppercase caps labels need extra letter-spacing) ─ */
+  --tracking-caps-tight: 0.06em;
+  --tracking-caps: 0.14em;
+  --tracking-caps-loose: 0.18em;
+  --tracking-caps-x-loose: 0.20em;
+
+  /* ── Font sizes — semantic, not numeric. Tailwind exposes each as
+   * `text-<name>`. rem (÷14, the base.css root) so the whole type scale
+   * tracks the responsive root font-size on small screens; the trailing
+   * comment keeps the original px so the intent stays legible. JSX never
+   * reaches for an arbitrary `text-[11px]`. */
+  --text-micro: 0.5625rem;     /* 7.9px  — micro caps: chip/tag eyebrows, text-button labels */
+  --text-mini: 0.6786rem;      /* 9.5px  — smallest mono label / axis ticks */
+  --text-label: 0.75rem;       /* 10.5px — pill labels, kv labels, mono caps */
+  --text-meta: 0.7857rem;      /* 11px   — mono uppercase meta strings */
+  --text-value: 0.8571rem;     /* 12px   — pill values, default mono numerics */
+  --text-num: 0.9286rem;       /* 13px   — table cell numerics */
+  --text-num-lg: 1rem;         /* 14px   — position card mono values */
+  --text-kv: 1.2857rem;        /* 18px   — kv-grid main value */
+  --text-pnl: 1.5714rem;            /* 22px   — PnL right-edge serif/mono */
+  --text-ticker: 1.2143rem;         /* 17px   — unattached-table ticker */
+  --text-ticker-display: 1.8571rem; /* 26px   — position card big serif ticker */
+  --text-display-italic: 1.5714rem; /* 22px   — strategy-label italic value */
+  --text-lede: 1.1071rem;           /* 15.5px — wire/feed serif lede */
+  --text-card-title: 1.1429rem;     /* 16px   — display table-cell title / id (admin) */
+  --text-wordmark: 2.5714rem;       /* 36px   — masthead Chinese wordmark */
+  --text-hero: 4.5714rem;           /* 64px   — first-run Welcome headline */
+  --text-body: 1.2857rem;           /* 18px   — serif body copy under hero */
+  --text-cta: 1.3571rem;            /* 19px   — heavy primary button label */
+
+  /* ── Line-heights ─────────────────────────────────────────────── */
+  --leading-tight: 1.05;
+  --leading-snug: 1.3;
+  --leading-relaxed: 1.55;
+
+  /* ── Density (tight, hardcoded) ───────────────────────────────── */
+  --spacing-row: 1.7143rem;        /* 24px */
+
+  /* ── Rule weights (px — hairlines must pixel-snap, never scale) ── *
+   * Raw values the legacy base.css classes read. CVA components use the
+   * Tailwind-native border-width utilities instead: `border` (1px = hair)
+   * and `border-2` (the brutalist thick rule). */
+  --border-rule-hair: 1px;
+  --border-rule-thick: 3px;
+
+  /* ── Elevation (Wired: NO shadows) ────────────────────────────── *
+   * The brutalist offset drop is gone. Wired elevation is hairline
+   * borders only (1px #e0e0e0 dividers, 1px/2px #000 emphasis).
+   * These vars stay defined as `none` so any downstream component
+   * still referencing `shadow-brutal` / `shadow-brutal-sm` flattens
+   * instead of breaking. */
+  --shadow-brutal: none;
+  --shadow-brutal-sm: none;
+
+  /* ── Themed control/surface knobs (Wired defaults; the Stripe overlay
+   * — jiedusuo.css, admin+desktop only — overrides these to rounded + soft
+   * + accent. The public newsprint site never imports jiedusuo.css, so it
+   * keeps these square/flat/ink defaults untouched). Components reach for
+   * them via arbitrary-value utilities, e.g. rounded-[var(--radius-control)].
+   *   --radius-control  buttons / inputs / selects / chips
+   *   --radius-surface  cards / modals / kv-grid / drawers
+   *   --btn-primary-bg  primary CTA fill (ink under Wired, accent under Stripe)
+   *   --elevation-card / --elevation-control  drop shadow (none under Wired) */
+  --radius-control: 0px;
+  --radius-surface: 0px;
+  --btn-primary-bg: var(--color-ink);
+  --btn-primary-fg: var(--color-paper);
+  --elevation-card: none;
+  --elevation-control: none;
+
+  /* ── Motion (restrained "wire-service" system; gated by reduced-motion) ─ *
+   * Durations: fast 120 / base 200 / slow 300. Standard ease = --ease-wire.
+   * Not a Tailwind namespace, so these emit as plain :root custom props the
+   * base.css motion classes + component transitions read. */
+  --motion-fast: 120ms;
+  --motion-base: 200ms;
+  --motion-slow: 300ms;
+  --ease-wire: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ── Reusable grid templates (only the genuinely-recurring shapes).
+   * Tailwind v4 exposes these as `grid-cols-{name}` utilities so JSX
+   * doesn't ship inline `style={{ gridTemplateColumns: ... }}`. Track
+   * widths in rem (÷14) so columns track the root on small screens. */
+  --grid-template-columns-position: 7.1429rem minmax(0, 1fr) 20rem 7.8571rem; /* 100 / 280 / 110px */
+  --grid-template-columns-dash: minmax(0, 2.2fr) minmax(0, 1fr);
+  --grid-template-columns-attach: minmax(0, 1.4fr) minmax(0, 1fr);
+  --grid-template-columns-config-toc: 15.7143rem 1fr;  /* 220px */
+  --grid-template-columns-kv6: repeat(6, minmax(0, 1fr));
+  --grid-template-columns-kv5: repeat(5, minmax(0, 1fr));
+  --grid-template-columns-kv4: repeat(4, minmax(0, 1fr));
+}
+
+/* Optional accent intensities — toggle by data-accent on <html>.
+ * Wired has no chromatic accent, so these are now no-ops: every
+ * intensity resolves to the same black/near-black ink duet. Kept so
+ * any markup still setting data-accent doesn't reintroduce green. */
+:root[data-accent="soft"] {
+  --color-primary: #000000;
+  --color-primary-2: #1a1a1a;
+}
+:root[data-accent="bold"] {
+  --color-primary: #000000;
+  --color-primary-2: #1a1a1a;
+}

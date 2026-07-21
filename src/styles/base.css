@@ -1,0 +1,903 @@
+/* Base resets + a handful of compound component classes that read
+ * better than 12 Tailwind utilities chained. Imported AFTER
+ * tokens.css from each app's globals.css.
+ *
+ * Anything that's a single tone / size sticks to Tailwind classes
+ * in the JSX. The classes below are kept for patterns that recur
+ * verbatim across multiple components (section heads, the kv grid,
+ * the data table). They use theme vars so adapting per-app is
+ * still possible.
+ */
+
+@layer base {
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    /* 14px studio root. Text and spacing tokens below are rem (÷14),
+     * so the whole system resolves against this anchor. The admin/desktop
+     * consoles keep a STABLE 14px root (no responsive root-scale ladder):
+     * their mobile adaptivity is the hand-tuned per-component 900/600
+     * @media blocks below, and root-scaling on top would compound with
+     * the size-bumps in those blocks. The public site re-anchors the root
+     * to 16px + its own ladder in newsprint.css (imported last). */
+    html,
+    body {
+        background: var(--color-paper);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+        font-size: 14px;
+        line-height: 1.4;
+        -webkit-font-smoothing: antialiased;
+        font-feature-settings: "ss01", "cv11";
+    }
+
+    /* Newspaper paper texture is intentionally absent — studio surface. */
+
+    button {
+        font: inherit;
+        color: inherit;
+    }
+    button:focus-visible {
+        outline: 2px solid var(--color-ink);
+        outline-offset: 2px;
+    }
+
+    code,
+    kbd,
+    samp,
+    pre,
+    textarea[data-code="true"] {
+        font-family: var(--font-code);
+    }
+
+    /* Numerics — kerned-off tabular figures everywhere. */
+    .tnum,
+    [data-tnum] {
+        font-feature-settings: "tnum";
+    }
+}
+
+@layer utilities {
+    /* Recurring micro-typography — uppercase caps labels and tabular
+   * numeric runs. The rendered face is the shared sans with tabular
+   * figures; actual code/log blocks use --font-code. */
+    .caps-label {
+        font-family: var(--font-sans);
+        font-size: var(--text-label);
+        letter-spacing: var(--tracking-caps-loose);
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--color-dim);
+    }
+    .caps-meta {
+        font-family: var(--font-sans);
+        font-size: var(--text-mini);
+        letter-spacing: var(--tracking-caps-x-loose);
+        text-transform: uppercase;
+        font-weight: 600;
+        color: var(--color-dim);
+    }
+    .caps-value {
+        font-family: var(--font-sans);
+        font-feature-settings: "tnum";
+        font-size: var(--text-value);
+        font-weight: 500;
+        color: var(--color-ink);
+    }
+    .caps-num {
+        font-family: var(--font-sans);
+        font-feature-settings: "tnum";
+        font-size: var(--text-num);
+        font-weight: 500;
+        color: var(--color-ink);
+    }
+    .ticker-display {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: var(--text-ticker-display);
+        line-height: 1;
+        letter-spacing: 0;
+        color: var(--color-ink);
+    }
+    .ticker-table {
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: var(--text-ticker);
+        color: var(--color-ink);
+    }
+    .lede {
+        font-family: var(--font-display);
+        font-size: var(--text-lede);
+        line-height: var(--leading-snug);
+        color: var(--color-ink);
+    }
+    .display-italic {
+        font-family: var(--font-display);
+        font-style: italic;
+        font-size: var(--text-display-italic);
+        color: var(--color-ink);
+    }
+}
+
+@layer components {
+    /* ── Page shell ───────────────────────────────────────────────── */
+    /* Breakpoints align with the Claude design contract (DESIGN.md):
+     *   ≤900px tablet  → 24px gutter
+     *   ≤600px phone   → 16px gutter
+     */
+    .page-shell {
+        max-width: 105.7143rem;
+        margin: 0 auto;
+        padding: 0 4.5714rem 5.7143rem 4.5714rem;
+        /* Safe-area insets for notch / home indicator in standalone PWA. */
+        padding-left: max(4.5714rem, env(safe-area-inset-left));
+        padding-right: max(4.5714rem, env(safe-area-inset-right));
+    }
+    @media (max-width: 900px) {
+        .page-shell {
+            padding: 0 1.7143rem 4rem 1.7143rem;
+            padding-left: max(1.7143rem, env(safe-area-inset-left));
+            padding-right: max(1.7143rem, env(safe-area-inset-right));
+        }
+    }
+    @media (max-width: 600px) {
+        .page-shell {
+            padding: 0 1.1429rem 3.4286rem 1.1429rem;
+            padding-left: max(1.1429rem, env(safe-area-inset-left));
+            padding-right: max(1.1429rem, env(safe-area-inset-right));
+        }
+    }
+
+    /* ── Section head ─────────────────────────────────────────────── */
+    .section-head {
+        display: flex;
+        align-items: baseline;
+        gap: 0.8571rem;
+        padding-bottom: 0.4286rem;
+        border-bottom: var(--border-rule-thick) solid var(--color-ink);
+        min-height: 1.2857rem;
+    }
+    .section-head--sub {
+        border-bottom-width: var(--border-rule-hair);
+        padding-bottom: 0.2857rem;
+    }
+    .section-meta {
+        margin-left: auto;
+        font-family: var(--font-sans);
+        font-size: 0.7143rem;
+        letter-spacing: var(--tracking-caps-loose);
+        color: var(--color-dim);
+        text-transform: uppercase;
+    }
+    /* When the rule has to break to a second visual line, push the meta
+     * below as a full-width caption rather than letting it crowd into a
+     * (now-hidden) title slot. */
+    @media (max-width: 900px) {
+        .section-head {
+            flex-wrap: wrap;
+        }
+        .section-meta {
+            margin-left: 0;
+            width: 100%;
+            padding-top: 0.2857rem;
+            font-size: 0.6786rem;
+        }
+    }
+
+    /* ── KV grid ──────────────────────────────────────────────────── */
+    .kv-grid {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        border-top: var(--border-rule-hair) solid var(--color-rule-soft);
+        border-bottom: var(--border-rule-hair) solid var(--color-rule-soft);
+    }
+    .kv {
+        padding: 1rem 1.2857rem;
+        border-right: var(--border-rule-hair) solid var(--color-rule-soft);
+    }
+    .kv:last-child {
+        border-right: 0;
+    }
+    /* Responsive collapse, per the Claude design contract:
+     *   ≤900px → 2 columns (rows of two)
+     *   ≤600px → 1 column   */
+    @media (max-width: 900px) {
+        /* `[style]` + !important so a KvGrid with an inline cols template
+         * (cols!==6 sets gridTemplateColumns inline) still collapses. */
+        .kv-grid,
+        .kv-grid[style] {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+        .kv {
+            padding: 0.8571rem 1rem;
+            border-right: var(--border-rule-hair) solid var(--color-rule-soft);
+            border-bottom: var(--border-rule-hair) solid var(--color-rule-soft);
+        }
+        .kv:nth-child(2n) {
+            border-right: 0;
+        }
+        .kv:nth-last-child(-n + 2) {
+            border-bottom: 0;
+        }
+    }
+    @media (max-width: 600px) {
+        .kv-grid,
+        .kv-grid[style] {
+            grid-template-columns: minmax(0, 1fr) !important;
+        }
+        .kv {
+            padding: 0.8571rem 0;
+            border-right: 0;
+        }
+        .kv:last-child {
+            border-bottom: 0;
+        }
+    }
+    .kv-label {
+        font-family: var(--font-sans);
+        font-size: 0.6786rem;
+        letter-spacing: var(--tracking-caps-x-loose);
+        color: var(--color-dim);
+        text-transform: uppercase;
+        margin-bottom: 0.4286rem;
+    }
+    .kv-value {
+        font-family: var(--font-sans);
+        font-size: 1.2857rem;
+        font-weight: 500;
+        color: var(--color-ink);
+        font-feature-settings: "tnum";
+        line-height: 1.05;
+    }
+    @media (max-width: 900px) {
+        .kv-value {
+            font-size: 1.2143rem;
+        }
+    }
+    @media (max-width: 600px) {
+        .kv-value {
+            font-size: 1.3571rem;
+        }
+    }
+    .kv-value .unit {
+        color: var(--color-muted);
+        font-size: 0.8571rem;
+        margin-left: 0.2143rem;
+    }
+    .kv-aux {
+        font-family: var(--font-sans);
+        font-size: 0.7143rem;
+        color: var(--color-muted);
+        margin-top: 0.4286rem;
+        font-feature-settings: "tnum";
+    }
+
+    /* ── Data tables ───────────────────────────────────────────────── */
+    /* Wrap wide tables in .table-scroll so they pan horizontally on phone
+     * instead of overflowing the page-shell. */
+    .table-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-family: var(--font-sans);
+        font-variant-numeric: tabular-nums;
+        font-feature-settings: "tnum";
+    }
+    .data-table th,
+    .data-table td {
+        padding-left: 0.8571rem;
+        padding-right: 0.8571rem;
+        vertical-align: top;
+    }
+    .data-table th:first-child,
+    .data-table td:first-child {
+        padding-left: 1rem;
+    }
+    .data-table th:last-child,
+    .data-table td:last-child {
+        padding-right: 1rem;
+    }
+    .data-table th {
+        border-bottom: var(--border-rule-hair) solid var(--color-ink);
+        padding-top: 0.7143rem;
+        padding-bottom: 0.5714rem;
+        color: var(--color-dim);
+        font-size: var(--text-mini);
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+    }
+    .data-table td {
+        border-bottom: var(--border-rule-hair) solid var(--color-rule-soft);
+        padding-top: 0.8571rem;
+        padding-bottom: 0.8571rem;
+        color: var(--color-ink);
+        font-size: var(--text-num);
+    }
+    .data-table .ticker-table {
+        line-height: 1.05;
+    }
+
+    /* ── Chip ─────────────────────────────────────────────────────── */
+    .chip {
+        font-family: var(--font-sans);
+        font-size: 0.6786rem;
+        letter-spacing: var(--tracking-caps);
+        text-transform: uppercase;
+        padding: 0.1429rem 0.5rem;
+        border: var(--border-rule-hair) solid var(--color-ink);
+        color: var(--color-ink);
+        background: var(--color-paper);
+    }
+    .chip--solid {
+        background: var(--color-ink);
+        color: var(--color-paper);
+    }
+    .chip--tint-ok {
+        background: var(--color-paper);
+        color: var(--color-ok-2);
+        border-color: var(--color-ok);
+    }
+    .chip--tint-warn {
+        background: var(--color-paper);
+        color: var(--color-negative-2);
+        border-color: var(--color-negative);
+    }
+    .chip--mode {
+        background: var(--color-paper-2);
+    }
+    .chip--primary {
+        background: var(--color-ink);
+        color: var(--color-paper);
+        border-color: var(--color-ink);
+    }
+
+    /* ── Buttons ──────────────────────────────────────────────────── */
+    .btn {
+        font-family: var(--font-display);
+        font-size: 1.1429rem;
+        font-weight: 600;
+        padding: 0.8571rem 1.5714rem;
+        border: var(--border-rule-hair) solid var(--color-ink);
+        background: var(--color-paper);
+        color: var(--color-ink);
+        cursor: pointer;
+        white-space: nowrap;
+        transition:
+            background var(--motion-fast) var(--ease-wire),
+            color var(--motion-fast) var(--ease-wire);
+    }
+    /* Wired hover = flat inversion (fill ink), not a colour shift. */
+    .btn:hover {
+        background: var(--color-ink);
+        color: var(--color-paper);
+        border-color: var(--color-ink);
+    }
+    .btn:active {
+        transform: translateY(1px);
+    }
+    .btn--primary {
+        background: var(--color-ink);
+        color: var(--color-paper);
+    }
+    .btn--primary:hover {
+        background: var(--color-paper);
+        color: var(--color-ink);
+        border-color: var(--color-ink);
+    }
+    .btn--ghost {
+        background: transparent;
+    }
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .attach-cta {
+        font-family: var(--font-serif-cn);
+        font-weight: 700;
+        color: var(--color-link);
+        background: none;
+        border: 0;
+        cursor: pointer;
+        padding: 0;
+        font-size: 0.9643rem;
+    }
+    .attach-cta:hover {
+        text-decoration: underline;
+    }
+    .attach-cta .arrow {
+        font-family: var(--font-sans);
+        margin-left: 0.1429rem;
+    }
+
+    /* Flat hairline frame with a 2px ink accent bar on the left
+     * (Level-2 emphasis), not the brutalist 3px offset rule. */
+    .inline-status {
+        border: var(--border-rule-hair) solid var(--color-ink);
+        border-left-width: 2px;
+        background: var(--color-paper);
+        color: var(--color-ink);
+        font-family: var(--font-sans);
+        font-size: 0.8571rem;
+        padding: 0.7143rem 1rem;
+    }
+    .inline-status--ok {
+        color: var(--color-ok-2);
+        border-color: var(--color-ok);
+    }
+    .inline-status--err {
+        color: var(--color-negative-2);
+        border-color: var(--color-negative);
+    }
+
+    /* ── Sunflower spin (referenced by Sunflower.tsx) ─────────────── */
+    /* keyframes live at top-level so they're addressable from the
+     component's inline `animation: …` style. */
+
+    /* ── Collapse / accordion ─────────────────────────────────────────
+     * Pure-CSS auto-height animation: the inner content sits in a grid
+     * track that animates 0fr → 1fr. No JS measuring, works for arbitrary
+     * content height. `Collapse.tsx` drives `data-open`.
+     *
+     * Use a prefixed class name here. Tailwind ships a `.collapse`
+     * visibility utility, and that makes expanded drawers occupy height
+     * while inheriting `visibility: collapse` to all children. */
+    .ui-collapse {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 260ms var(--ease-wire);
+    }
+    .ui-collapse[data-open="true"] {
+        grid-template-rows: 1fr;
+    }
+    .ui-collapse-inner {
+        overflow: hidden;
+        min-height: 0;
+    }
+    /* Fade the contents in/out alongside the height glide so freshly
+     * mounted panels don't pop. */
+    .ui-collapse[data-open="true"] > .ui-collapse-inner {
+        opacity: 1;
+        transition: opacity 220ms ease 40ms;
+    }
+    .ui-collapse[data-open="false"] > .ui-collapse-inner {
+        opacity: 0;
+        transition: opacity 160ms ease;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .ui-collapse,
+        .ui-collapse > .ui-collapse-inner {
+            transition: none;
+        }
+    }
+
+    /* ── Page fade-in transition ──────────────────────────────────── */
+    .page-fade {
+        animation: page-fade-in var(--motion-base) var(--ease-wire);
+    }
+    @keyframes page-fade-in {
+        from {
+            opacity: 0;
+            transform: translateY(0.4286rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .page-fade {
+            animation: none;
+        }
+    }
+}
+
+/* Outside any layer so the Sunflower component's inline animation
+   resolves without import order surprises. */
+@keyframes sunspin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ── Responsive grid overrides ────────────────────────────────────
+ * Outside any @layer so these win against Tailwind's `@layer utilities`
+ * generated `.grid-cols-position` / `.grid-cols-dash` rules.
+ *
+ * Two trigger mechanisms here:
+ *   - Viewport @media for the dashboard 2-col stack (depends on screen).
+ *   - @container for the position row stack (depends on the row's own
+ *     container width). The dashboard runs in a 2-col layout above
+ *     900px, which can squeeze the left "positions" column down to
+ *     ~250px even at 1280px viewports — CJK labels then wrap
+ *     character-by-character. Querying the container fixes this:
+ *     whenever the position-list container is narrower than 720px,
+ *     each row reflows to the card stack regardless of viewport.
+ *
+ * Breakpoints match the Claude design contract (DESIGN.md): 900px and
+ * 600px for viewport, 720px / 460px for container.
+ */
+.position-list {
+    container-type: inline-size;
+    container-name: position-list;
+}
+
+@media (max-width: 900px) {
+    .grid-cols-dash {
+        grid-template-columns: minmax(0, 1fr) !important;
+        row-gap: 1.7143rem;
+        column-gap: 0;
+    }
+    /* The wire rail loses its left hairline when it stacks below positions. */
+    .grid-cols-dash .wire-rail {
+        border-left: 0 !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+    }
+}
+
+/* Position row → stacked card with named areas, per the design:
+ *   ┌──────────┬─────┐
+ *   │   id     │ pnl │
+ *   ├──────────┴─────┤
+ *   │     chips      │
+ *   │     nums       │
+ *   │     chart      │
+ *   └────────────────┘
+ * The PositionRow wrapper around chips+nums (child 2 in the JSX) is
+ * collapsed via `display: contents` so its inner blocks (chips,
+ * numbers, optional reason) become first-class grid children and can
+ * land in distinct rows. */
+@container position-list (max-width: 720px) {
+    .grid-cols-position {
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "id      pnl"
+            "chips   chips"
+            "note    note"
+            "nums    nums"
+            "chart   chart";
+        column-gap: 1rem;
+        row-gap: 0.7143rem;
+    }
+    .grid-cols-position > :nth-child(1) {
+        grid-area: id;
+    }
+    /* The wrapper around chips+nums (a Tailwind `flex flex-col` block):
+     * flatten so its children become grid children. */
+    .grid-cols-position > :nth-child(2) {
+        display: contents;
+    }
+    /* The chip row (first child of the wrapper) — first row of the stack. */
+    .grid-cols-position > :nth-child(2) > :nth-child(1) {
+        grid-area: chips;
+    }
+    /* The numbers grid (second child) — own row, top + bottom hairlines. */
+    .grid-cols-position > :nth-child(2) > :nth-child(2) {
+        grid-area: nums;
+        border-top: var(--border-rule-hair) solid var(--color-rule-soft);
+        border-bottom: var(--border-rule-hair) solid var(--color-rule-soft);
+        padding: 0.5714rem 0;
+    }
+    /* Optional reason / note paragraph — sits with the chips row, but
+     * allow it to break long machine-generated strings (UUIDs, tokens)
+     * so it doesn't push the chips column wider than its grid track. */
+    .grid-cols-position > :nth-child(2) > :nth-child(3) {
+        grid-area: note;
+        align-self: start;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+    .grid-cols-position > :nth-child(3) {
+        grid-area: chart;
+    }
+    .grid-cols-position > :nth-child(4) {
+        grid-area: pnl;
+        padding-top: 0;
+        align-self: start;
+    }
+}
+@container position-list (max-width: 460px) {
+    /* On the narrowest container widths the right-hand "pnl" column
+     * shrinks even tighter — keep the same areas but tighten the gutter. */
+    .grid-cols-position {
+        column-gap: 0.7143rem;
+        row-gap: 0.5714rem;
+    }
+}
+
+/* ── Touch-device tweaks ───────────────────────────────────────────
+ * `(hover: none)` matches touchscreens (phones, tablets). The position
+ * row's hover affordance is a no-op there, so we suppress the cursor +
+ * the colour shifts. Inline text-CTAs get a slightly larger hit target. */
+@media (hover: none) {
+    .grid-cols-position {
+        cursor: default;
+    }
+    .grid-cols-position:hover .ticker-display {
+        color: var(--color-ink);
+    }
+    .attach-cta {
+        padding: 0.4286rem 0;
+    }
+    /* ≥44px touch targets on touch devices (≈2.75rem at the 14px root). */
+    .btn {
+        min-height: 2.75rem;
+    }
+    .chip,
+    .seg-btn,
+    .cat-chip {
+        min-height: 2.5rem;
+        display: inline-flex;
+        align-items: center;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+ * Redesign: layout primitives + motion system (ported from the sunflower
+ * desktop prototype). Top-level (unlayered) so they win over Tailwind's
+ * generated utilities — matching the existing pattern above.
+ * ═══════════════════════════════════════════════════════════════════ */
+
+/* ── Layout: main + side rail (dashboard wire, attach, config, setup) ─ */
+.layout-rail {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 0.42fr);
+    align-items: start;
+    gap: 0 2.8571rem;
+}
+.layout-rail > .rail {
+    min-width: 0;
+}
+
+/* Dashboard 2-col: positions (wide) + wire rail (narrow). Collapses to a
+ * single column with the wire BELOW positions (see the @media override that
+ * resets .wire-rail's left hairline further down). */
+.grid-cols-dash {
+    display: grid;
+    grid-template-columns: minmax(0, 2.2fr) minmax(0, 1fr);
+    gap: 0 2.8571rem;
+}
+.wire-rail {
+    border-left: var(--border-rule-hair) solid var(--color-rule-soft);
+    padding-left: 1.7143rem;
+    margin-left: 0.2857rem;
+}
+@media (max-width: 900px) {
+    .layout-rail {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 1.7143rem;
+    }
+    /* Rail floats above the main column on narrow screens. */
+    .layout-rail > .rail {
+        order: -1;
+    }
+}
+
+/* ── Section rhythm + bare head ────────────────────────────────────── */
+.section {
+    margin-top: 2.2857rem;
+}
+.section-head-bare {
+    display: flex;
+    align-items: baseline;
+    padding-bottom: 0.35rem;
+}
+.section-head-bare .section-meta {
+    margin-left: 0;
+}
+
+/* ═══════════════ Motion system (gated by prefers-reduced-motion) ════ */
+
+/* List / feed entrance stagger — items rise from hidden; the visible
+ * end-state is the base style so print / reduced-motion show content.
+ * Gate via [data-animate="in"] on a parent; set --i on each item. */
+[data-animate="in"] > .stagger-item {
+    opacity: 0;
+    transform: translateY(0.5714rem);
+    animation: stagger-rise var(--motion-base) var(--ease-wire) forwards;
+    animation-delay: calc(var(--i, 0) * 45ms);
+}
+@keyframes stagger-rise {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Value-change tick flash (PnL / mark updates) — up = gain wash,
+ * down = loss wash; fades to transparent. Toggled in JS on animationend. */
+.tick-up {
+    animation: tick-up var(--motion-slow) var(--ease-wire);
+}
+.tick-down {
+    animation: tick-down var(--motion-slow) var(--ease-wire);
+}
+@keyframes tick-up {
+    0% {
+        background: rgb(20 132 81 / 0.18);
+    }
+    100% {
+        background: transparent;
+    }
+}
+@keyframes tick-down {
+    0% {
+        background: rgb(177 74 58 / 0.16);
+    }
+    100% {
+        background: transparent;
+    }
+}
+
+/* Status dot live-ping (engine / WS "live" states only). */
+.live-ping {
+    position: relative;
+}
+.live-ping::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background: currentColor;
+    opacity: 0.55;
+    animation: live-ping 1.8s var(--ease-wire) infinite;
+}
+@keyframes live-ping {
+    0% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    70% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(2.4);
+        opacity: 0;
+    }
+}
+
+/* Modal / ConfirmGate enter-exit — scrim fade + dialog rise; on phone the
+ * dialog becomes a near-full-screen sheet sliding up with a sticky action
+ * bar. Driven by data-open in Modal.tsx. */
+.scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: var(--color-overlay-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.2857rem;
+    opacity: 0;
+    transition: opacity var(--motion-base) var(--ease-wire);
+}
+.scrim[data-open="true"] {
+    opacity: 1;
+}
+.dialog {
+    background: var(--color-paper);
+    border: 2px solid var(--color-ink);
+    width: 100%;
+    max-width: var(--dialog-max, 37.5rem);
+    max-height: 90vh;
+    overflow: auto;
+    transform: translateY(0.8571rem) scale(0.99);
+    opacity: 0;
+    transition:
+        transform var(--motion-base) var(--ease-wire),
+        opacity var(--motion-base) var(--ease-wire);
+}
+.scrim[data-open="true"] .dialog {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+@media (max-width: 600px) {
+    .scrim {
+        padding: 0;
+        align-items: flex-end;
+    }
+    .dialog {
+        max-width: 100%;
+        max-height: 96vh;
+        min-height: 60vh;
+        border-width: 0;
+        border-top: 2px solid var(--color-ink);
+        transform: translateY(100%);
+    }
+    .scrim[data-open="true"] .dialog {
+        transform: translateY(0);
+    }
+    .dialog-actions {
+        position: sticky;
+        bottom: 0;
+        background: var(--color-paper);
+        border-top: var(--border-rule-hair) solid var(--color-rule-soft);
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+}
+
+/* Sparkline / chart one-time draw reveal. */
+.draw-path {
+    stroke-dasharray: var(--len, 600);
+    stroke-dashoffset: var(--len, 600);
+    animation: draw var(--motion-slow) var(--ease-wire) forwards;
+}
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* Segmented control / chip ease. */
+.seg-btn {
+    transition:
+        background var(--motion-fast) var(--ease-wire),
+        color var(--motion-fast) var(--ease-wire);
+}
+
+/* Skeleton shimmer (loading). */
+.skeleton {
+    background: var(--color-paper-2);
+    position: relative;
+    overflow: hidden;
+}
+.skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgb(0 0 0 / 0.04), transparent);
+    transform: translateX(-100%);
+    animation: shimmer 1.4s ease-in-out infinite;
+}
+@keyframes shimmer {
+    to {
+        transform: translateX(100%);
+    }
+}
+
+/* Reduced-motion: disable everything decorative. */
+@media (prefers-reduced-motion: reduce) {
+    .page-fade,
+    [data-animate="in"] > .stagger-item,
+    .tick-up,
+    .tick-down,
+    .draw-path,
+    .skeleton::after,
+    .live-ping::after {
+        animation: none !important;
+    }
+    [data-animate="in"] > .stagger-item {
+        opacity: 1;
+        transform: none;
+    }
+    .draw-path {
+        stroke-dashoffset: 0;
+    }
+    .dialog,
+    .scrim {
+        transition: none !important;
+    }
+    .dialog {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+/* ── PositionRow value backer ──────────────────────────────────────── */
+.pos-val {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: var(--text-num-lg);
+    color: var(--color-ink);
+    text-align: right;
+}
