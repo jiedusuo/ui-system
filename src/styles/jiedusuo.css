@@ -580,10 +580,9 @@ textarea {
 .ui-notice--error > div:last-child {
     background: transparent;
 }
-/* The square mark glyph → inherit the band tone, lose the inverted box. */
+/* Lucide status icons inherit the semantic band tone. Custom marks keep the
+ * same 20px alignment box, without a second hand-drawn frame. */
 .ui-notice-mark {
-    border-radius: 999px;
-    border-color: currentColor !important;
     color: inherit !important;
 }
 

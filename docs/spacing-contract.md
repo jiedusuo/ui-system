@@ -28,7 +28,8 @@ grid tracks, coarse-pointer hit targets, icon sizes and the public hero.
   `StatusStrip`, `StatStrip`, `ReceiptPanel`, `DangerZone`, `DataTable` and
   `PageLoading` use the surface/action roles above.
 - `NoticeBox` status meaning is explicit: `info`, `warning`, and `error`.
-  Legacy `primary`, `danger`, and `neutral` remain for compatibility.
+  Their default marks come from Lucide (`Info`, `TriangleAlert`, `CircleX`);
+  legacy `primary`, `danger`, and `neutral` remain compatible.
 - Public-editorial primitives, charts, side navigation, author chips and the
   internal shadcn shell were reviewed but keep their measured geometry because
   their spacing represents layout or touch mechanics rather than a generic

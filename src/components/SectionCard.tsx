@@ -49,7 +49,15 @@ export function SectionCard({ title, en, meta, children, className, flush }: Sec
                     <span className="font-sans text-label uppercase tracking-caps text-muted">{meta}</span>
                 )}
             </div>
-            <div className={flush ? "" : "px-surface-x pt-surface-y pb-surface-bottom"}>{children}</div>
+            <div
+                className={cn(
+                    "ui-sectioncard-body",
+                    flush ? "" : "px-surface-x pt-surface-y pb-surface-bottom",
+                )}
+                data-flush={flush ? "true" : undefined}
+            >
+                {children}
+            </div>
         </section>
     );
 }

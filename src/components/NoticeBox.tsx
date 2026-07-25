@@ -1,5 +1,6 @@
 import type { HTMLAttributes, ReactNode } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import { CircleX, Info, TriangleAlert, type LucideIcon } from "lucide-react";
 
 import { cn } from "../lib/cn";
 
@@ -35,16 +36,16 @@ const noticeBand = cva(
 );
 
 const noticeMark = cva(
-    "inline-grid size-5 flex-none place-items-center border-2 font-display text-value font-black leading-none",
+    "inline-grid size-5 flex-none place-items-center leading-none",
     {
         variants: {
             tone: {
-                danger: "border-paper text-paper",
-                primary: "border-paper text-paper",
-                neutral: "border-ink text-ink",
-                info: "border-paper text-paper",
-                warning: "border-ochre text-tint-warn-ink",
-                error: "border-paper text-paper",
+                danger: "text-paper",
+                primary: "text-paper",
+                neutral: "text-ink",
+                info: "text-paper",
+                warning: "text-tint-warn-ink",
+                error: "text-paper",
             },
         },
         defaultVariants: { tone: "danger" },
@@ -89,9 +90,18 @@ export interface NoticeBoxProps
     children?: ReactNode;
 }
 
+const toneIcons: Record<NonNullable<NoticeBoxProps["tone"]>, LucideIcon> = {
+    danger: TriangleAlert,
+    primary: Info,
+    neutral: Info,
+    info: Info,
+    warning: TriangleAlert,
+    error: CircleX,
+};
+
 export function NoticeBox({
     title,
-    mark = "!",
+    mark,
     items,
     strong,
     children,
@@ -100,14 +110,9 @@ export function NoticeBox({
     ...props
 }: NoticeBoxProps) {
     const resolvedTone = tone ?? "danger";
+    const ToneIcon = toneIcons[resolvedTone];
     const resolvedMark = mark === undefined
-        ? resolvedTone === "info"
-            ? "i"
-            : resolvedTone === "error"
-                ? "×"
-                : resolvedTone === "neutral"
-                    ? "·"
-                    : "!"
+        ? <ToneIcon className="size-4" strokeWidth={2} />
         : mark;
     return (
         <aside

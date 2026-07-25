@@ -59,11 +59,18 @@ test("reusable surfaces consume semantic insets instead of private padding", asy
     for (const [path, pattern] of Object.entries(contracts)) {
         assert.match(await source(path), pattern, `${path} drifted from the spacing contract`);
     }
+    const sectionCard = await source("components/SectionCard.tsx");
+    assert.match(sectionCard, /ui-sectioncard-body/);
+    assert.match(sectionCard, /data-flush=/);
 });
 
 test("notices expose stable information, warning, and error semantics", async () => {
     const notice = await source("components/NoticeBox.tsx");
     const skin = await source("styles/jiedusuo.css");
+    assert.match(notice, /Info/);
+    assert.match(notice, /TriangleAlert/);
+    assert.match(notice, /CircleX/);
+    assert.doesNotMatch(notice, /resolvedTone === "info"[\s\S]*"i"/);
     for (const tone of ["info", "warning", "error"]) {
         assert.match(notice, new RegExp(`${tone}:`));
         assert.match(skin, new RegExp(`\\.ui-notice--${tone}`));
