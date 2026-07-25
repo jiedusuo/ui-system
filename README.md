@@ -31,6 +31,13 @@ Import `tokens.css` for CSS custom properties (colors, spacing, typography). Lay
 - `jiedusuo.css` — public site (newsprint/emerald editorial)
 - `operator.css` — admin console + desktop client (clean, functional)
 
+Reusable controls and surfaces follow the semantic
+[spacing contract](docs/spacing-contract.md). Layout-specific geometry such as
+chart plots and touch hit targets remains local to the component.
+
+`NoticeBox` supports stable semantic tones—`info`, `warning`, and `error`—in
+addition to the legacy `primary`, `danger`, and `neutral` tones.
+
 ### Components
 
 | Category | Components |

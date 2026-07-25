@@ -24,8 +24,8 @@ import { cn } from "../lib/cn";
 export const controlClass =
     "w-full border border-ink bg-paper font-code text-ink outline-none placeholder:text-dim focus:outline-2 focus:-outline-offset-2 focus:outline-ink aria-[invalid=true]:border-negative aria-[invalid=true]:focus:outline-negative disabled:cursor-not-allowed disabled:bg-paper-2 disabled:text-dim";
 export const controlDensity = {
-    default: "px-2.5 py-2 text-num",
-    compact: "px-2 py-1.5 text-label",
+    default: "px-control-x py-control-y text-num",
+    compact: "px-control-compact-x py-control-compact-y text-label",
 } as const;
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -45,10 +45,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
     );
 });
 
-export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {}
+export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+    density?: keyof typeof controlDensity;
+}
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-    { className, ...rest },
+    { className, density = "default", ...rest },
     ref,
 ) {
     return (
@@ -57,6 +59,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
             className={cn(
                 "ui-control",
                 controlClass,
+                controlDensity[density],
                 "min-h-16 leading-relaxed resize-y",
                 className,
             )}
@@ -111,7 +114,7 @@ export function Field({
               })
             : children;
     return (
-        <label className={cn("gap-1.5 grid", className)}>
+        <label className={cn("gap-field-gap grid", className)}>
             {label && (
                 <Kicker className={density === "compact" ? "text-mini" : undefined}>{label}</Kicker>
             )}

@@ -50,8 +50,8 @@ const button = cva(
                     "border border-ink bg-transparent text-ink hover:bg-ink hover:text-paper",
             },
             size: {
-                md: "text-meta px-4 py-2.5",
-                tiny: "text-label px-3 py-1.5",
+                md: "text-meta px-action-x py-action-y",
+                tiny: "text-label px-action-compact-x py-action-compact-y",
                 cta: "text-cta gap-3 px-6 py-4",
                 serif: "text-card-title px-[1.5714rem] py-[0.8571rem]",
             },

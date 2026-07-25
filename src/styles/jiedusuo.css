@@ -61,10 +61,14 @@
     --color-negative: #df1b41;
     --color-negative-2: #b3162f;
     --color-ochre: #b1640a;
+    --color-info: #0869b8;
+    --color-info-2: #075797;
 
     /* Tints (translucent washes) re-pointed at the accent. */
     --color-tint-primary: rgb(193 39 45 / 0.08);
     --color-tint-negative: rgb(223 27 65 / 0.1);
+    --color-tint-info: rgb(8 105 184 / 0.09);
+    --color-tint-info-ink: var(--color-info-2);
 
     /* ── Typography — Manrope everywhere, Geist Mono for literals ──── */
     --font-display:
@@ -183,6 +187,8 @@
     --color-negative-border: #5a2434;
     --color-ochre: #d6923e;
     --color-ochre-2: #e8ab5f;
+    --color-info: #6cbbf7;
+    --color-info-2: #8dcbfa;
 
     /* Tints wash the surface UP in dark, not down. The reversed-spelling
      * aliases forward, exactly as in the light block. */
@@ -191,6 +197,8 @@
     --color-tint-negative: rgb(242 80 107 / 0.14);
     --color-tint-ok: rgb(47 189 134 / 0.14);
     --color-tint-warn: rgb(214 146 62 / 0.14);
+    --color-tint-info: rgb(108 187 247 / 0.13);
+    --color-tint-info-ink: var(--color-info-2);
 
     /* Elevation reads as depth, not haze: black, and deeper. */
     --shadow-sm: 0 1px 1px rgb(0 0 0 / 0.3), 0 1px 2px rgb(0 0 0 / 0.36);
@@ -517,7 +525,8 @@ textarea {
     border-color: var(--color-rule-soft);
     border-left-width: 3px;
     border-radius: var(--radius-surface);
-    box-shadow: var(--shadow-card);
+    background: var(--color-paper);
+    box-shadow: none;
     overflow: hidden;
 }
 .ui-notice--danger {
@@ -529,9 +538,24 @@ textarea {
 .ui-notice--neutral {
     border-left-color: var(--color-rule);
 }
+.ui-notice--info {
+    border-color: color-mix(in srgb, var(--color-info) 42%, var(--color-rule-soft));
+    border-left-color: var(--color-info);
+    background: var(--color-tint-info);
+}
+.ui-notice--warning {
+    border-color: color-mix(in srgb, var(--color-ochre) 42%, var(--color-rule-soft));
+    border-left-color: var(--color-ochre);
+    background: var(--color-tint-warn);
+}
+.ui-notice--error {
+    border-color: color-mix(in srgb, var(--color-negative) 42%, var(--color-rule-soft));
+    border-left-color: var(--color-negative);
+    background: var(--color-tint-negative);
+}
 .ui-notice-band {
     background: var(--color-paper) !important;
-    border-bottom: 1px solid var(--color-rule-soft);
+    border-bottom: 0;
 }
 .ui-notice--danger .ui-notice-band {
     color: var(--color-negative-2) !important;
@@ -542,9 +566,23 @@ textarea {
 .ui-notice--neutral .ui-notice-band {
     color: var(--color-ink) !important;
 }
+.ui-notice--info .ui-notice-band {
+    color: var(--color-info-2) !important;
+}
+.ui-notice--warning .ui-notice-band {
+    color: var(--color-tint-warn-ink) !important;
+}
+.ui-notice--error .ui-notice-band {
+    color: var(--color-negative-2) !important;
+}
+.ui-notice--info > div:last-child,
+.ui-notice--warning > div:last-child,
+.ui-notice--error > div:last-child {
+    background: transparent;
+}
 /* The square mark glyph → inherit the band tone, lose the inverted box. */
 .ui-notice-mark {
-    border-radius: var(--radius-sm);
+    border-radius: 999px;
     border-color: currentColor !important;
     color: inherit !important;
 }

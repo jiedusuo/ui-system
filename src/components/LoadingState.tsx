@@ -7,8 +7,8 @@ const loadingFrame = cva("relative overflow-hidden border border-rule bg-paper t
     variants: {
         tone: {
             public: "px-[clamp(1.25rem,3vw,2rem)] py-7",
-            studio: "px-5 py-5",
-            compact: "px-4 py-4",
+            studio: "px-surface-x py-surface-x",
+            compact: "px-panel py-panel",
         },
     },
     defaultVariants: {

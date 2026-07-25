@@ -44,7 +44,7 @@ export function DangerZone({ title, defaultOpen, children, className }: DangerZo
                 type="button"
                 aria-expanded={open}
                 onClick={() => setOpen((v) => !v)}
-                className="gap-2.5 bg-tint-negative px-4 py-2.5 font-sans text-value font-bold text-negative-2 flex w-full cursor-pointer items-center text-left"
+                className="gap-control-x bg-tint-negative px-panel py-action-y font-sans text-value font-bold text-negative-2 flex w-full cursor-pointer items-center text-left"
             >
                 <TriangleAlert className="size-4 flex-none" aria-hidden />
                 <span className="min-w-0 flex-1">{title}</span>
@@ -57,7 +57,7 @@ export function DangerZone({ title, defaultOpen, children, className }: DangerZo
                 />
             </button>
             <Collapse open={open}>
-                <div className="gap-3.5 p-4 grid">{children}</div>
+                <div className="gap-stack-md p-panel grid">{children}</div>
             </Collapse>
         </div>
     );
@@ -85,7 +85,7 @@ export function DangerStep({ n, title, children, className }: DangerStepProps) {
     return (
         <div
             className={cn(
-                "border-rule-soft p-3.5 rounded-[var(--radius-control)] border",
+                "border-rule-soft p-panel-y rounded-[var(--radius-control)] border",
                 className,
             )}
         >

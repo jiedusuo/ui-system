@@ -1,6 +1,6 @@
 {
     "name": "@jiedusuo/ui-system",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Shared React design system + components for Jiedusuo apps.",
     "type": "module",
     "main": "./src/index.ts",
@@ -24,7 +24,7 @@
         "url": "https://github.com/jiedusuo/ui-system.git"
     },
     "scripts": {
-        "test": "node --test src/lib/strategy-dsl.test.mjs",
+        "test": "node --test src/lib/*.test.mjs",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -49,12 +49,19 @@
         "tailwind-merge": "^2.6.0"
     },
     "peerDependencies": {
+        "next": ">=14",
         "react": ">=18",
         "react-dom": ">=18"
+    },
+    "peerDependenciesMeta": {
+        "next": {
+            "optional": true
+        }
     },
     "devDependencies": {
         "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
+        "next": "^16.2.11",
         "typescript": "^5.7.2"
     }
 }

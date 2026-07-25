@@ -96,8 +96,8 @@ export function Modal({
                 style={{ "--dialog-max": width } as React.CSSProperties}
             >
                 {(kicker || title) && (
-                    <div className="ui-modal-head flex items-center justify-between gap-4 border-b-2 border-ink bg-paper-2 px-5 py-3.5">
-                        <div className="grid gap-0.5">
+                    <div className="ui-modal-head flex items-center justify-between gap-stack-lg border-b-2 border-ink bg-paper-2 px-surface-x py-panel-y">
+                        <div className="grid gap-stack-xs">
                             {kicker && (
                                 <span className="font-sans text-mini uppercase tracking-caps-loose text-muted">
                                     {kicker}

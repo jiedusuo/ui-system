@@ -22,7 +22,7 @@ import { cn } from "../lib/cn";
  * Renders a `<div role="status">`; caller `className` composes via `cn()`.
  */
 const statusBox = cva(
-    "border border-l-2 bg-paper px-4 py-[0.7143rem] font-sans text-value",
+    "border border-l-2 bg-paper px-panel py-action-y font-sans text-value",
     {
         variants: {
             tone: {

@@ -64,7 +64,7 @@ export function StatusStrip({ children, right, className }: StatusStripProps) {
         <div
             className={cn(
                 "ui-statusstrip",
-                "flex flex-wrap items-center gap-x-5 gap-y-1.5 border-b-2 border-rule bg-paper-2 px-6 py-2.5 font-sans text-meta uppercase tracking-caps text-muted",
+                "flex flex-wrap items-center gap-x-surface-x gap-y-field-gap border-b-2 border-rule bg-paper-2 px-surface-x py-action-y font-sans text-meta uppercase tracking-caps text-muted",
                 className,
             )}
         >

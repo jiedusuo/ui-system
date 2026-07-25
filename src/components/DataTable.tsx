@@ -43,7 +43,7 @@ export function Th({ className, align = "left", ...rest }: ThProps) {
     return (
         <th
             className={cn(
-                "border-b border-ink px-[0.8571rem] pb-[0.5714rem] pt-[0.7143rem] align-top font-semibold uppercase tracking-caps text-mini text-dim first:pl-4 last:pr-4",
+                "border-b border-ink px-panel-y pb-control-y pt-action-y align-top font-semibold uppercase tracking-caps text-mini text-dim first:pl-panel last:pr-panel",
                 alignClass[align],
                 className,
             )}
@@ -61,7 +61,7 @@ export function Td({ className, align = "left", ...rest }: TdProps) {
     return (
         <td
             className={cn(
-                "border-b border-rule-soft px-[0.8571rem] py-[0.8571rem] align-top text-num text-ink first:pl-4 last:pr-4",
+                "border-b border-rule-soft px-panel-y py-panel-y align-top text-num text-ink first:pl-panel last:pr-panel",
                 alignClass[align],
                 className,
             )}

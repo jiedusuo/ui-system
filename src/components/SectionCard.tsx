@@ -34,7 +34,7 @@ export function SectionCard({ title, en, meta, children, className, flush }: Sec
                 className,
             )}
         >
-            <div className="ui-sectioncard-head flex items-baseline gap-3 border-b border-rule bg-paper-2 px-6 py-3.5">
+            <div className="ui-sectioncard-head flex items-baseline gap-stack-md border-b border-rule bg-paper-2 px-surface-x py-panel-y">
                 <div className="flex min-w-0 flex-1 flex-col gap-px">
                     <span className="font-display text-lede font-extrabold leading-none whitespace-nowrap">
                         {title}
@@ -49,7 +49,7 @@ export function SectionCard({ title, en, meta, children, className, flush }: Sec
                     <span className="font-sans text-label uppercase tracking-caps text-muted">{meta}</span>
                 )}
             </div>
-            <div className={flush ? "" : "px-6 pt-4 pb-5"}>{children}</div>
+            <div className={flush ? "" : "px-surface-x pt-surface-y pb-surface-bottom"}>{children}</div>
         </section>
     );
 }

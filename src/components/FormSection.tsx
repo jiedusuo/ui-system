@@ -42,7 +42,7 @@ export function FormSection({ title, sub, dirty, busy, children, className }: Fo
             aria-busy={busy}
             data-dirty={dirty ? "true" : undefined}
             className={cn(
-                "min-w-0 gap-3.5 bg-paper p-4 grid rounded-[var(--radius-surface)] border transition-[border-color,box-shadow,opacity] duration-[var(--motion-fast)] motion-reduce:transition-none",
+                "min-w-0 gap-stack-md bg-paper p-panel grid rounded-[var(--radius-surface)] border transition-[border-color,box-shadow,opacity] duration-[var(--motion-fast)] motion-reduce:transition-none",
                 dirty
                     ? "border-primary shadow-[0_0_0_3px_var(--color-accent-ring)]"
                     : "border-rule-soft shadow-[var(--elevation-card)]",
@@ -50,8 +50,8 @@ export function FormSection({ title, sub, dirty, busy, children, className }: Fo
                 className,
             )}
         >
-            <div className="gap-3 flex items-baseline">
-                <div className="min-w-0 gap-0.5 flex flex-1 flex-col">
+            <div className="gap-stack-md flex items-baseline">
+                <div className="min-w-0 gap-stack-xs flex flex-1 flex-col">
                     <span className="font-sans text-card-title font-bold text-ink">{title}</span>
                     {sub && <span className="font-code text-mini text-dim">{sub}</span>}
                 </div>

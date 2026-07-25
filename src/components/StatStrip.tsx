@@ -64,7 +64,7 @@ export function StatStrip({ cells, className }: StatStripProps) {
             {cells.map((cell, i) => (
                 <div
                     key={i}
-                    className="basis-0 gap-0.5 border-rule-soft px-4 py-3 flex min-w-[9rem] flex-1 flex-col border-r last:border-r-0"
+                    className="basis-0 gap-stack-xs border-rule-soft px-panel py-panel-y flex min-w-[9rem] flex-1 flex-col border-r last:border-r-0"
                 >
                     <span className="gap-1.5 font-sans text-label font-semibold tracking-caps text-muted flex items-center">
                         {cell.icon && <cell.icon className="size-3.5" aria-hidden />}

@@ -3,7 +3,7 @@
 import { forwardRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
 
 import { cn } from "../lib/cn";
-import { Kicker } from "./Field";
+import { controlClass, controlDensity, Kicker } from "./Field";
 
 export interface SecretFieldProps
     extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
@@ -11,6 +11,7 @@ export interface SecretFieldProps
     help?: ReactNode;
     /** Text for the reveal/hide toggle. Defaults to 显示 / 隐藏. */
     revealLabel?: [show: string, hide: string];
+    density?: keyof typeof controlDensity;
 }
 
 /**
@@ -26,14 +27,14 @@ export interface SecretFieldProps
  * still ship a reveal button rather than relying on the CSS alone.
  */
 export const SecretField = forwardRef<HTMLInputElement, SecretFieldProps>(function SecretField(
-    { label, help, className, revealLabel = ["显示", "隐藏"], ...rest },
+    { label, help, className, revealLabel = ["显示", "隐藏"], density = "default", ...rest },
     ref,
 ) {
     const [revealed, setRevealed] = useState(false);
     return (
-        <label className="grid gap-1.5">
+        <label className="grid gap-field-gap">
             {label && <Kicker>{label}</Kicker>}
-            <div className="flex gap-2">
+            <div className="flex gap-control-compact-x">
                 <input
                     ref={ref}
                     type="text"
@@ -43,7 +44,9 @@ export const SecretField = forwardRef<HTMLInputElement, SecretFieldProps>(functi
                     autoCorrect="off"
                     className={cn(
                         "ui-control",
-                        "min-w-0 flex-1 font-code text-num px-2.5 py-2 border border-ink bg-paper text-ink outline-none focus:outline-2 focus:-outline-offset-2 focus:outline-ink placeholder:text-dim",
+                        "min-w-0 flex-1",
+                        controlClass,
+                        controlDensity[density],
                         // -webkit-text-security has no Tailwind utility — this masks
                         // while keeping type=text so IME composition keeps working.
                         revealed ? "[-webkit-text-security:none] tracking-normal" : "[-webkit-text-security:disc]",
@@ -55,7 +58,7 @@ export const SecretField = forwardRef<HTMLInputElement, SecretFieldProps>(functi
                     type="button"
                     aria-pressed={revealed}
                     onClick={() => setRevealed((v) => !v)}
-                    className="ui-secret-reveal shrink-0 border border-rule-soft bg-paper px-3 font-sans text-label uppercase tracking-caps text-muted hover:border-ink hover:bg-ink hover:text-paper"
+                    className="ui-secret-reveal shrink-0 border border-rule-soft bg-paper px-action-compact-x font-sans text-label uppercase tracking-caps text-muted hover:border-ink hover:bg-ink hover:text-paper"
                 >
                     {revealed ? revealLabel[1] : revealLabel[0]}
                 </button>

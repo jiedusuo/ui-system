@@ -33,7 +33,7 @@ export function Switch({ on, onChange, disabled, labels, size = "md", className,
             data-on={on ? "true" : "false"}
             onClick={() => onChange?.(!on)}
             className={cn(
-                "inline-flex shrink-0 items-center gap-2.5 border-0 bg-transparent p-0",
+                "inline-flex shrink-0 items-center gap-control-x border-0 bg-transparent p-0",
                 disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
                 className,
             )}
@@ -87,11 +87,11 @@ export function SwitchRow({ title, sub, on, onChange, disabled, labels, size, cl
     return (
         <div
             className={cn(
-                "flex items-center justify-between gap-4 border-b border-dashed border-rule-soft py-2.5 last:border-b-0",
+                "flex items-center justify-between gap-stack-lg border-b border-dashed border-rule-soft py-action-y last:border-b-0",
                 className,
             )}
         >
-            <span className="grid min-w-0 gap-0.5">
+            <span className="grid min-w-0 gap-stack-xs">
                 <span className="font-display text-num font-bold">{title}</span>
                 {sub && <span className="font-sans text-label text-muted">{sub}</span>}
             </span>

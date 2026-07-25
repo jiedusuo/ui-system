@@ -41,12 +41,12 @@ export function ReceiptPanel({ receipt, className }: ReceiptPanelProps) {
         <div
             role="status"
             className={cn(
-                "mt-3 border-rule-soft bg-paper overflow-hidden rounded-[var(--radius-surface)] border border-l-[3px] shadow-[var(--elevation-card)]",
+                "mt-stack-md border-rule-soft bg-paper overflow-hidden rounded-[var(--radius-surface)] border border-l-[3px] shadow-[var(--elevation-card)]",
                 ok ? "border-l-ok" : "border-l-negative",
                 className,
             )}
         >
-            <div className="gap-2.5 border-rule-soft bg-paper-2 px-3 py-2 flex flex-wrap items-center border-b">
+            <div className="gap-control-x border-rule-soft bg-paper-2 px-panel py-control-y flex flex-wrap items-center border-b">
                 <span
                     className={cn(
                         "font-code text-value font-semibold",
@@ -65,7 +65,7 @@ export function ReceiptPanel({ receipt, className }: ReceiptPanelProps) {
                     <span className="font-code text-muted">{receipt.key ?? "已随请求提交"}</span>
                 </span>
             </div>
-            <pre className="m-0 max-h-80 px-3 py-2.5 font-code text-label leading-relaxed text-ink overflow-auto break-words whitespace-pre-wrap">
+            <pre className="m-0 max-h-80 px-panel py-action-y font-code text-label leading-relaxed text-ink overflow-auto break-words whitespace-pre-wrap">
                 {JSON.stringify(receipt.body, null, 2)}
             </pre>
         </div>
