@@ -64,15 +64,26 @@ test("reusable surfaces consume semantic insets instead of private padding", asy
     assert.match(sectionCard, /data-flush=/);
 });
 
-test("notices expose stable information, warning, and error semantics", async () => {
+test("feedback primitives expose one semantic tone vocabulary without aliases", async () => {
     const notice = await source("components/NoticeBox.tsx");
+    const inline = await source("components/InlineStatus.tsx");
+    const strip = await source("components/StatusStrip.tsx");
+    const tones = await source("lib/semantic-tone.ts");
     const skin = await source("styles/jiedusuo.css");
     assert.match(notice, /Info/);
     assert.match(notice, /TriangleAlert/);
     assert.match(notice, /CircleX/);
     assert.doesNotMatch(notice, /resolvedTone === "info"[\s\S]*"i"/);
-    for (const tone of ["info", "warning", "error"]) {
+    for (const tone of ["neutral", "info", "success", "warning", "error"]) {
+        assert.match(tones, new RegExp(`"${tone}"`));
         assert.match(notice, new RegExp(`${tone}:`));
         assert.match(skin, new RegExp(`\\.ui-notice--${tone}`));
+    }
+    for (const alias of ["danger", "primary", "ok", "warn", "err", "idle", "off", "live"]) {
+        assert.doesNotMatch(
+            `${notice}\n${inline}\n${strip}`,
+            new RegExp(`\\b${alias}:`),
+            `legacy tone alias ${alias} returned`,
+        );
     }
 });

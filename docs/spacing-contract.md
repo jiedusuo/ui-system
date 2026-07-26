@@ -27,9 +27,9 @@ grid tracks, coarse-pointer hit targets, icon sizes and the public hero.
 - `SectionCard`, `FormSection`, `Modal`, `NoticeBox`, `StatusBox`,
   `StatusStrip`, `StatStrip`, `ReceiptPanel`, `DangerZone`, `DataTable` and
   `PageLoading` use the surface/action roles above.
-- `NoticeBox` status meaning is explicit: `info`, `warning`, and `error`.
-  Their default marks come from Lucide (`Info`, `TriangleAlert`, `CircleX`);
-  legacy `primary`, `danger`, and `neutral` remain compatible.
+- `NoticeBox`, `InlineStatus`, `StatusBox`, and `StatusDot` share the explicit
+  `neutral`, `info`, `success`, `warning`, and `error` vocabulary. Default
+  NoticeBox marks come from Lucide.
 - Public-editorial primitives, charts, side navigation, author chips and the
   internal shadcn shell were reviewed but keep their measured geometry because
   their spacing represents layout or touch mechanics rather than a generic

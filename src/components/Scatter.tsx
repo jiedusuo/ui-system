@@ -50,7 +50,6 @@ const MIN_VBW = 320;
 const PAD_LEFT = 36;
 const PAD_RIGHT = 8;
 const PAD_TOP = 8;
-const PAD_BOTTOM = 22;
 const HIT_RADIUS = 14;
 
 const POINT_FILL: Record<ScatterPointTone, string> = {
@@ -116,8 +115,9 @@ export function Scatter({
     const [svgWidth, setSvgWidth] = useState(MIN_VBW);
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
+    const padBottom = xLabel ? (xTicks.length > 0 ? 38 : 24) : xTicks.length > 0 ? 22 : 8;
     const plotW = svgWidth - PAD_LEFT - PAD_RIGHT;
-    const plotH = height - PAD_TOP - PAD_BOTTOM;
+    const plotH = height - PAD_TOP - padBottom;
 
     const validPoints = useMemo(
         () => points.filter((p) => Number.isFinite(p.x) && Number.isFinite(p.y)),

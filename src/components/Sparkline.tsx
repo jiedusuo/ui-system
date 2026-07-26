@@ -101,6 +101,9 @@ export function Sparkline({
         >
             {pts.length > 0 && (
                 <>
+                    {fill && areaPath && (
+                        <path d={areaPath} style={{ stroke: "none", fill: AREA_FILL[tone] }} />
+                    )}
                     {refY != null && (
                         <line
                             x1={0}
@@ -108,15 +111,12 @@ export function Sparkline({
                             y1={refY}
                             y2={refY}
                             style={{
-                                stroke: "var(--color-rule-soft)",
+                                stroke: "var(--color-rule)",
                                 strokeWidth: 1,
                                 strokeDasharray: "2 3",
                                 vectorEffect: "non-scaling-stroke",
                             }}
                         />
-                    )}
-                    {fill && areaPath && (
-                        <path d={areaPath} style={{ stroke: "none", fill: AREA_FILL[tone] }} />
                     )}
                     <path d={linePath} style={lineStyle} />
                 </>

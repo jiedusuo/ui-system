@@ -25,15 +25,22 @@ export function KvCell({ label, value, unit, aux }: KvCellProps) {
 
 interface KvGridProps {
     children: ReactNode;
-    /** Number of equal-width columns. Default 6 to match the design. */
-    cols?: number;
+    /**
+     * Upper bound for equal-width columns. The responsive contract still caps
+     * the grid at two columns at ≤900px and one at ≤600px.
+     */
+    maxCols?: number;
 }
 
-export function KvGrid({ children, cols = 6 }: KvGridProps) {
+export function KvGrid({ children, maxCols = 6 }: KvGridProps) {
     return (
         <div
             className="kv-grid"
-            style={cols !== 6 ? { gridTemplateColumns: `repeat(${cols}, 1fr)` } : undefined}
+            style={
+                maxCols !== 6
+                    ? { gridTemplateColumns: `repeat(${maxCols}, minmax(0, 1fr))` }
+                    : undefined
+            }
         >
             {children}
         </div>

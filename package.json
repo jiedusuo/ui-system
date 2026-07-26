@@ -1,6 +1,6 @@
 {
     "name": "@jiedusuo/ui-system",
-    "version": "0.2.1",
+    "version": "0.3.0",
     "description": "Shared React design system + components for Jiedusuo apps.",
     "type": "module",
     "main": "./src/index.ts",
@@ -24,7 +24,7 @@
         "url": "https://github.com/jiedusuo/ui-system.git"
     },
     "scripts": {
-        "test": "node --test src/lib/*.test.mjs",
+        "test": "node --test src/lib/*.test.mjs && env NODE_ENV=test vitest run src/components/components.test.tsx",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {
@@ -59,9 +59,15 @@
         }
     },
     "devDependencies": {
+        "@testing-library/react": "^16.3.0",
+        "@testing-library/jest-dom": "6.9.1",
         "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
+        "jsdom": "^26.1.0",
         "next": "^16.2.11",
+        "react": "^19.2.8",
+        "react-dom": "^19.2.8",
+        "vitest": "^3.2.4",
         "typescript": "^5.7.2"
     }
 }

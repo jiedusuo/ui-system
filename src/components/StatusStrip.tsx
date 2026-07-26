@@ -3,17 +3,24 @@
 import { Fragment, type ReactNode } from "react";
 
 import { cn } from "../lib/cn";
+import type { SemanticTone } from "../lib/semantic-tone";
 
-export type StatusDotTone = "live" | "idle" | "warn" | "ok" | "off";
-
-/** A small round status indicator; `live` pulses. Token-driven tones. */
-export function StatusDot({ tone, className }: { tone: StatusDotTone; className?: string }) {
-    const fill: Record<StatusDotTone, string> = {
-        live: "bg-ok",
-        ok: "bg-ok",
-        idle: "bg-dim",
-        warn: "bg-ochre",
-        off: "bg-dim",
+/** A small round status indicator. Tone and activity are independent. */
+export function StatusDot({
+    tone,
+    pulse = false,
+    className,
+}: {
+    tone: SemanticTone;
+    pulse?: boolean;
+    className?: string;
+}) {
+    const fill: Record<SemanticTone, string> = {
+        neutral: "bg-dim",
+        info: "bg-info",
+        success: "bg-ok",
+        warning: "bg-ochre",
+        error: "bg-negative",
     };
     return (
         <span
@@ -21,8 +28,8 @@ export function StatusDot({ tone, className }: { tone: StatusDotTone; className?
             className={cn(
                 "relative inline-block size-2.5 shrink-0 rounded-full",
                 fill[tone],
-                tone === "live" &&
-                    "after:absolute after:inset-0 after:animate-ping after:rounded-full after:bg-ok",
+                pulse &&
+                    "after:absolute after:inset-0 after:animate-ping after:rounded-full after:bg-current",
                 className,
             )}
         />

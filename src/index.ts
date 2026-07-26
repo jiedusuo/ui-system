@@ -5,6 +5,7 @@ export * from "./lib/cn";
 export * from "./lib/format";
 export * from "./lib/i18n";
 export * from "./lib/indicators";
+export * from "./lib/semantic-tone";
 export * from "./lib/strategy-dsl";
 
 export * from "./hooks/useClockEt";
@@ -35,6 +36,8 @@ export * from "./components/StatusStrip";
 export * from "./components/PagePrimitives";
 export * from "./components/AuthorChips";
 export * from "./components/SectionNav";
+export * from "./components/SegmentedControl";
+export * from "./components/GroupedList";
 export * from "./components/LoadingState";
 export * from "./components/NoticeBox";
 

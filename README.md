@@ -28,25 +28,30 @@ import "@jiedusuo/ui-system/styles/base.css";
 
 Import `tokens.css` for CSS custom properties (colors, spacing, typography). Layer a surface theme on top:
 
-- `jiedusuo.css` — public site (newsprint/emerald editorial)
-- `operator.css` — admin console + desktop client (clean, functional)
+- `jiedusuo.css` — the Jiedusuo product palette, typography, and component skin
+- `operator.css` — shadcn token bridge for `AppSidebar`; admin and desktop import
+  it after `jiedusuo.css`
 
 Reusable controls and surfaces follow the semantic
 [spacing contract](docs/spacing-contract.md). Layout-specific geometry such as
 chart plots and touch hit targets remains local to the component.
+The shared API and composition rules live in the
+[component contract](docs/components-contract.md).
 
-`NoticeBox` supports stable semantic tones—`info`, `warning`, and `error`—in
-addition to the legacy `primary`, `danger`, and `neutral` tones.
+`NoticeBox`, `InlineStatus`, `StatusBox`, and `StatusDot` share one semantic
+tone vocabulary: `neutral`, `info`, `success`, `warning`, and `error`.
+`StatusDot` activity is independent (`pulse`), so animation never changes the
+meaning of its colour.
 
 ### Components
 
 | Category | Components |
 |----------|-----------|
 | Forms | `Button`, `Field`, `Input`, `SecretField`, `Switch`, `Select` |
-| Layout | `SectionCard`, `FormSection`, `PagePrimitives`, `Collapse`, `Modal` |
+| Layout | `SectionCard`, `FormSection`, `PagePrimitives`, `Collapse`, `Modal`, `GroupedList` |
 | Data | `DataTable`, `KvGrid`, `StatStrip`, `StatusStrip`, `InlineStatus` |
 | Charts | `CandleChart`, `Sparkline`, `Histogram`, `Scatter`, `OscillatorChart` |
-| Navigation | `AppSidebar`, `SideNav`, `SectionNav` |
+| Navigation | `AppSidebar`, `SideNav`, `SectionNav`, `SegmentedControl` |
 | Feedback | `NoticeBox`, `Badge`, `ReceiptPanel`, `DangerZone`, `LoadingState` |
 
 ### Hooks

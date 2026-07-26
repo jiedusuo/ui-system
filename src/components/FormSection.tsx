@@ -8,6 +8,12 @@ export interface FormSectionProps {
     /** The scope's wire name — `write_policy · actor_id = null`. A machine
      * literal, rendered `font-code`. */
     sub?: ReactNode;
+    /** Human-readable context for the scope header (count, owner, revision). */
+    headerMeta?: ReactNode;
+    /** Controls that act on this scope, aligned with its title. */
+    actions?: ReactNode;
+    /** Receipt, validation summary, or other material after the fields. */
+    footer?: ReactNode;
     /** Fields differ from what the server holds. Lights the accent boundary. */
     dirty?: boolean;
     /** A save for this scope is in flight: every control inside is disabled
@@ -27,15 +33,21 @@ export interface FormSectionProps {
  * visual boundary of the fields it affects**. Two bare 保存 buttons on one page
  * with no boundary between them is the bug.
  *
- * Hidden contract: the save button and the `ReceiptPanel` are CHILDREN you
- * compose (their wiring — endpoint, `Idempotency-Key`, validation — is
- * per-scope); this component owns only the boundary, the title/sub, and the
- * dirty/busy affordance. `dirty` draws an accent border + ring and a 未保存
- * badge, so an unsaved scope is unmistakable among its clean siblings; keep the
- * save button disabled until `dirty`. `busy` renders as a disabled fieldset, so
- * a child control needs no `disabled={busy}` of its own.
+ * The endpoint wiring remains app-owned, but earned composition seats keep
+ * actions and receipts attached to the fields they govern. `dirty` draws an
+ * accent border + ring and a 未保存 badge; `busy` disables the whole fieldset.
  */
-export function FormSection({ title, sub, dirty, busy, children, className }: FormSectionProps) {
+export function FormSection({
+    title,
+    sub,
+    headerMeta,
+    actions,
+    footer,
+    dirty,
+    busy,
+    children,
+    className,
+}: FormSectionProps) {
     return (
         <fieldset
             disabled={busy}
@@ -50,18 +62,27 @@ export function FormSection({ title, sub, dirty, busy, children, className }: Fo
                 className,
             )}
         >
-            <div className="gap-stack-md flex items-baseline">
+            <div className="gap-stack-md flex flex-wrap items-start">
                 <div className="min-w-0 gap-stack-xs flex flex-1 flex-col">
                     <span className="font-sans text-card-title font-bold text-ink">{title}</span>
                     {sub && <span className="font-code text-mini text-dim">{sub}</span>}
                 </div>
-                {dirty && (
-                    <span className="bg-tint-primary px-2 py-0.5 font-sans text-mini font-bold text-primary flex-none rounded-full">
-                        未保存
-                    </span>
-                )}
+                <div className="gap-control-x flex flex-none flex-wrap items-center justify-end">
+                    {headerMeta && (
+                        <span className="font-sans text-mini text-muted">{headerMeta}</span>
+                    )}
+                    {dirty && (
+                        <span className="bg-tint-primary px-2 py-0.5 font-sans text-mini font-bold text-primary flex-none rounded-full">
+                            未保存
+                        </span>
+                    )}
+                    {actions}
+                </div>
             </div>
             {children}
+            {footer && (
+                <div className="border-rule-soft pt-stack-md border-t">{footer}</div>
+            )}
         </fieldset>
     );
 }

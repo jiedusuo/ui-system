@@ -8,6 +8,7 @@ import type {
 } from "react";
 
 import { cn } from "../lib/cn";
+import type { SemanticTone } from "../lib/semantic-tone";
 import { Button } from "./Button";
 import { StatusDot } from "./StatusStrip";
 
@@ -186,6 +187,8 @@ export interface EmptyStatePanelProps {
     title: ReactNode;
     body: ReactNode;
     children?: ReactNode;
+    /** `compact` fits inside an existing card, table, or dense operator pane. */
+    density?: "default" | "compact";
     className?: string;
 }
 
@@ -194,25 +197,51 @@ export function EmptyStatePanel({
     title,
     body,
     children,
+    density = "default",
     className,
 }: EmptyStatePanelProps) {
     return (
         <div
             className={cn(
                 "ui-card",
-                "border-rule bg-paper-2 border px-[clamp(1.75rem,4vw,2.75rem)] py-[clamp(1.75rem,4vw,2.75rem)] text-center",
+                "border-rule bg-paper-2 border",
+                density === "compact"
+                    ? "px-panel py-panel text-left"
+                    : "px-[clamp(1.75rem,4vw,2.75rem)] py-[clamp(1.75rem,4vw,2.75rem)] text-center",
                 className,
             )}
+            data-density={density}
         >
             {kicker && (
                 <span className="font-sans text-primary text-mini tracking-caps-x-loose uppercase">
                     {kicker}
                 </span>
             )}
-            <h3 className="my-2.5 font-display text-2xl font-extrabold">{title}</h3>
-            <p className="mb-4 font-sans text-muted mx-auto max-w-[34rem] leading-[1.65]">{body}</p>
+            <h3
+                className={cn(
+                    "font-display font-extrabold",
+                    density === "compact" ? "my-stack-xs text-card-title" : "my-2.5 text-2xl",
+                )}
+            >
+                {title}
+            </h3>
+            <p
+                className={cn(
+                    "font-sans text-muted max-w-[34rem] leading-[1.65]",
+                    density === "compact" ? "mb-stack-md" : "mb-4 mx-auto",
+                )}
+            >
+                {body}
+            </p>
             {children && (
-                <div className="gap-3 flex flex-wrap items-center justify-center">{children}</div>
+                <div
+                    className={cn(
+                        "gap-control-x flex flex-wrap items-center",
+                        density === "default" && "justify-center",
+                    )}
+                >
+                    {children}
+                </div>
             )}
         </div>
     );
@@ -322,12 +351,11 @@ export function InlineStatus({
     action,
     className,
 }: {
-    tone: "ok" | "warn" | "error" | "idle";
+    tone: SemanticTone;
     children: ReactNode;
     action?: ReactNode;
     className?: string;
 }) {
-    const dotTone = tone === "ok" ? "ok" : tone === "warn" ? "warn" : "off";
     return (
         <div
             className={cn(
@@ -338,13 +366,14 @@ export function InlineStatus({
             aria-live="polite"
         >
             <StatusDot
-                tone={dotTone}
+                tone={tone}
                 className={cn(
                     "size-[0.4375rem] border bg-transparent",
-                    tone === "ok" && "border-ok bg-ok",
-                    tone === "warn" && "border-ochre bg-ochre",
+                    tone === "neutral" && "border-muted",
+                    tone === "info" && "border-info bg-info",
+                    tone === "success" && "border-ok bg-ok",
+                    tone === "warning" && "border-ochre bg-ochre",
                     tone === "error" && "border-negative bg-negative",
-                    tone === "idle" && "border-muted",
                 )}
             />
             <span className="min-w-0 text-muted">{children}</span>

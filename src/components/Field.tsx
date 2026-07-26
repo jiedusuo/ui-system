@@ -22,7 +22,7 @@ import { cn } from "../lib/cn";
  * and a family where only one member can look invalid is the defect this row
  * of classes closes. */
 export const controlClass =
-    "w-full border border-ink bg-paper font-code text-ink outline-none placeholder:text-dim focus:outline-2 focus:-outline-offset-2 focus:outline-ink aria-[invalid=true]:border-negative aria-[invalid=true]:focus:outline-negative disabled:cursor-not-allowed disabled:bg-paper-2 disabled:text-dim";
+    "w-full border border-ink bg-paper text-ink outline-none placeholder:text-dim focus:outline-2 focus:-outline-offset-2 focus:outline-ink aria-[invalid=true]:border-negative aria-[invalid=true]:focus:outline-negative disabled:cursor-not-allowed disabled:bg-paper-2 disabled:text-dim";
 export const controlDensity = {
     default: "px-control-x py-control-y text-num",
     compact: "px-control-compact-x py-control-compact-y text-label",
@@ -30,16 +30,24 @@ export const controlDensity = {
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
     density?: keyof typeof controlDensity;
+    /** Use the code face for machine literals; prose is the default. */
+    code?: boolean;
 }
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
-    { className, density = "default", ...rest },
+    { className, density = "default", code = false, ...rest },
     ref,
 ) {
     return (
         <input
             ref={ref}
-            className={cn("ui-control", controlClass, controlDensity[density], className)}
+            className={cn(
+                "ui-control",
+                controlClass,
+                controlDensity[density],
+                code ? "font-code" : "font-sans",
+                className,
+            )}
             {...rest}
         />
     );
@@ -47,10 +55,12 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
 
 export interface TextareaProps extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     density?: keyof typeof controlDensity;
+    /** Use the code face for machine literals or source text; prose is the default. */
+    code?: boolean;
 }
 
 export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function Textarea(
-    { className, density = "default", ...rest },
+    { className, density = "default", code = false, ...rest },
     ref,
 ) {
     return (
@@ -60,6 +70,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
                 "ui-control",
                 controlClass,
                 controlDensity[density],
+                code ? "font-code" : "font-sans",
                 "min-h-16 leading-relaxed resize-y",
                 className,
             )}
@@ -105,18 +116,38 @@ export function Field({
     density = "default",
     className,
 }: FieldProps) {
+    const generatedControlId = useId();
     const errorId = useId();
-    const control =
-        error && isValidElement(children)
-            ? cloneElement(children as ReactElement<Record<string, unknown>>, {
-                  "aria-invalid": true,
-                  "aria-describedby": errorId,
-              })
-            : children;
+    const helpId = useId();
+    const child = isValidElement(children)
+        ? (children as ReactElement<Record<string, unknown>>)
+        : null;
+    const existingId = child?.props.id;
+    const controlId = typeof existingId === "string" ? existingId : generatedControlId;
+    const describedBy = [
+        typeof child?.props["aria-describedby"] === "string"
+            ? child.props["aria-describedby"]
+            : null,
+        error ? errorId : null,
+        help ? helpId : null,
+    ]
+        .filter(Boolean)
+        .join(" ") || undefined;
+    const control = child
+        ? cloneElement(child, {
+              id: controlId,
+              ...(error ? { "aria-invalid": true } : {}),
+              ...(describedBy ? { "aria-describedby": describedBy } : {}),
+          })
+        : children;
     return (
-        <label className={cn("gap-field-gap grid", className)}>
+        <div className={cn("gap-field-gap grid", className)}>
             {label && (
-                <Kicker className={density === "compact" ? "text-mini" : undefined}>{label}</Kicker>
+                <label htmlFor={child ? controlId : undefined}>
+                    <Kicker className={density === "compact" ? "text-mini" : undefined}>
+                        {label}
+                    </Kicker>
+                </label>
             )}
             {control}
             {error && (
@@ -133,6 +164,7 @@ export function Field({
             )}
             {help && (
                 <span
+                    id={helpId}
                     className={cn(
                         "font-sans leading-snug text-muted [&_b]:text-ink",
                         density === "compact" ? "text-mini" : "text-label",
@@ -141,6 +173,6 @@ export function Field({
                     {help}
                 </span>
             )}
-        </label>
+        </div>
     );
 }

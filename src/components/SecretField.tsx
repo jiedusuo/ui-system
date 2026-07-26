@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef, useState, type InputHTMLAttributes, type ReactNode } from "react";
+import { forwardRef, useId, useState, type InputHTMLAttributes, type ReactNode } from "react";
 
 import { cn } from "../lib/cn";
 import { controlClass, controlDensity, Kicker } from "./Field";
@@ -9,6 +9,7 @@ export interface SecretFieldProps
     extends Omit<InputHTMLAttributes<HTMLInputElement>, "type"> {
     label?: ReactNode;
     help?: ReactNode;
+    error?: ReactNode;
     /** Text for the reveal/hide toggle. Defaults to 显示 / 隐藏. */
     revealLabel?: [show: string, hide: string];
     density?: keyof typeof controlDensity;
@@ -27,16 +28,45 @@ export interface SecretFieldProps
  * still ship a reveal button rather than relying on the CSS alone.
  */
 export const SecretField = forwardRef<HTMLInputElement, SecretFieldProps>(function SecretField(
-    { label, help, className, revealLabel = ["显示", "隐藏"], density = "default", ...rest },
+    {
+        label,
+        help,
+        error,
+        id,
+        className,
+        revealLabel = ["显示", "隐藏"],
+        density = "default",
+        "aria-describedby": describedBy,
+        "aria-invalid": invalid,
+        ...rest
+    },
     ref,
 ) {
     const [revealed, setRevealed] = useState(false);
+    const generatedId = useId();
+    const errorId = useId();
+    const helpId = useId();
+    const inputId = id ?? generatedId;
+    const descriptionIds = [
+        describedBy,
+        error ? errorId : null,
+        help ? helpId : null,
+    ]
+        .filter(Boolean)
+        .join(" ") || undefined;
     return (
-        <label className="grid gap-field-gap">
-            {label && <Kicker>{label}</Kicker>}
+        <div className="grid gap-field-gap">
+            {label && (
+                <label htmlFor={inputId}>
+                    <Kicker className={density === "compact" ? "text-mini" : undefined}>
+                        {label}
+                    </Kicker>
+                </label>
+            )}
             <div className="flex gap-control-compact-x">
                 <input
                     ref={ref}
+                    id={inputId}
                     type="text"
                     inputMode="text"
                     spellCheck={false}
@@ -47,11 +77,14 @@ export const SecretField = forwardRef<HTMLInputElement, SecretFieldProps>(functi
                         "min-w-0 flex-1",
                         controlClass,
                         controlDensity[density],
+                        "font-code",
                         // -webkit-text-security has no Tailwind utility — this masks
                         // while keeping type=text so IME composition keeps working.
                         revealed ? "[-webkit-text-security:none] tracking-normal" : "[-webkit-text-security:disc]",
                         className,
                     )}
+                    aria-invalid={error ? true : invalid}
+                    aria-describedby={descriptionIds}
                     {...rest}
                 />
                 <button
@@ -63,9 +96,29 @@ export const SecretField = forwardRef<HTMLInputElement, SecretFieldProps>(functi
                     {revealed ? revealLabel[1] : revealLabel[0]}
                 </button>
             </div>
-            {help && (
-                <span className="font-sans text-label leading-snug text-muted [&_b]:text-ink">{help}</span>
+            {error && (
+                <span
+                    id={errorId}
+                    role="alert"
+                    className={cn(
+                        "font-sans leading-snug text-negative",
+                        density === "compact" ? "text-mini" : "text-label",
+                    )}
+                >
+                    {error}
+                </span>
             )}
-        </label>
+            {help && (
+                <span
+                    id={helpId}
+                    className={cn(
+                        "font-sans leading-snug text-muted [&_b]:text-ink",
+                        density === "compact" ? "text-mini" : "text-label",
+                    )}
+                >
+                    {help}
+                </span>
+            )}
+        </div>
     );
 });

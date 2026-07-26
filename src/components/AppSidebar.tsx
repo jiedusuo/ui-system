@@ -20,6 +20,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarRail,
 } from "../ui/sidebar";
 
 export interface NavItem {
@@ -33,6 +34,12 @@ export interface NavGroup {
     items: NavItem[];
 }
 
+export interface AppSidebarBrand {
+    icon: ReactNode;
+    title: ReactNode;
+    subtitle?: ReactNode;
+}
+
 export interface AppSidebarProps {
     groups: NavGroup[];
     /** True when `href` is the active route. The app owns pathname matching
@@ -40,8 +47,10 @@ export interface AppSidebarProps {
     isActive: (href: string) => boolean;
     /** App-supplied client Link (e.g. next/link). Defaults to a plain <a>. */
     linkComponent?: ElementType;
-    /** Brand block (sun + wordmark), rendered at the top of the rail. */
-    brand: ReactNode;
+    /** Structured brand. AppSidebar owns its icon-collapse treatment. */
+    brand: AppSidebarBrand;
+    /** State-driven apps may navigate without anchors (e.g. a local desktop shell). */
+    onNavigate?: (href: string) => void;
     /** Optional status slot under the brand (desktop LivePill / admin badge). */
     status?: ReactNode;
     /** Optional footer slot at the rail bottom (install button + version). */
@@ -58,6 +67,7 @@ export function AppSidebar({
     isActive,
     linkComponent,
     brand,
+    onNavigate,
     status,
     footer,
     collapsible = "offcanvas",
@@ -68,8 +78,25 @@ export function AppSidebar({
     return (
         <Sidebar collapsible={collapsible} aria-label={ariaLabel} className={className}>
             <SidebarHeader className="gap-2.5">
-                {brand}
-                {status}
+                <div
+                    data-slot="app-sidebar-brand"
+                    className="gap-2.5 px-1 py-0.5 flex min-w-0 items-center group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0"
+                >
+                    <span className="flex-none">{brand.icon}</span>
+                    <span className="leading-tight min-w-0 grid group-data-[collapsible=icon]:hidden">
+                        <b className="font-display text-card-title text-ink truncate">
+                            {brand.title}
+                        </b>
+                        {brand.subtitle && (
+                            <span className="text-mini text-dim truncate">{brand.subtitle}</span>
+                        )}
+                    </span>
+                </div>
+                {status ? (
+                    <div data-slot="app-sidebar-status" className="group-data-[collapsible=icon]:hidden">
+                        {status}
+                    </div>
+                ) : null}
             </SidebarHeader>
             <SidebarContent>
                 {groups.map((group) => (
@@ -79,16 +106,29 @@ export function AppSidebar({
                             <SidebarMenu>
                                 {group.items.map((item) => {
                                     const Icon = item.icon;
+                                    const content = (
+                                        <>
+                                            <Icon />
+                                            <span>{item.label}</span>
+                                        </>
+                                    );
                                     return (
                                         <SidebarMenuItem key={item.href}>
                                             <SidebarMenuButton
                                                 asChild
                                                 isActive={isActive(item.href)}
+                                                tooltip={item.label}
                                             >
-                                                <Link href={item.href}>
-                                                    <Icon />
-                                                    <span>{item.label}</span>
-                                                </Link>
+                                                {onNavigate ? (
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => onNavigate(item.href)}
+                                                    >
+                                                        {content}
+                                                    </button>
+                                                ) : (
+                                                    <Link href={item.href}>{content}</Link>
+                                                )}
                                             </SidebarMenuButton>
                                         </SidebarMenuItem>
                                     );
@@ -98,7 +138,12 @@ export function AppSidebar({
                     </SidebarGroup>
                 ))}
             </SidebarContent>
-            {footer ? <SidebarFooter>{footer}</SidebarFooter> : null}
+            {footer ? (
+                <SidebarFooter className="group-data-[collapsible=icon]:hidden">
+                    {footer}
+                </SidebarFooter>
+            ) : null}
+            {collapsible === "icon" ? <SidebarRail /> : null}
         </Sidebar>
     );
 }

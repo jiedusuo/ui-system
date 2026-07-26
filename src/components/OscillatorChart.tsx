@@ -59,6 +59,7 @@ export interface OscillatorChartProps {
 // Neutral grey (--color-dim) — the only literal, used when a token can't be
 // read (SSR); never a palette hue. See CandleChart.
 const NEUTRAL = "#8a98ad";
+const LINE_TOKENS = ["var(--color-ink)", "var(--color-primary)", "var(--color-muted)"] as const;
 
 function readToken(name: string, fallback: string): string {
     if (typeof document === "undefined") return fallback;
@@ -177,7 +178,7 @@ export function OscillatorChart({
                 priceLineVisible: false,
                 lastValueVisible: false,
                 crosshairMarkerVisible: false,
-                title: ln.label,
+                title: height >= 120 ? ln.label : "",
                 autoscaleInfoProvider: fixedScale,
             });
             s.setData(dedupeSorted(ln.points.map((p) => ({ time: asTime(p.ts), value: p.value }))));
@@ -246,7 +247,26 @@ export function OscillatorChart({
         };
     }, [histogram, lines, refLines, height, spineTs, yRange, interactive, syncBus]);
 
+    const compactLabels = height < 120
+        ? lines.filter((line) => line.label && line.points.length)
+        : [];
+
     return (
-        <div ref={wrapRef} style={{ width: "100%", height }} role="img" aria-label="indicator" />
+        <div className="relative w-full" style={{ height }} role="img" aria-label="indicator">
+            <div ref={wrapRef} style={{ width: "100%", height }} aria-hidden />
+            {compactLabels.length > 0 && (
+                <div className="left-2 top-1 max-w-[calc(100%-4.5rem)] gap-2 pointer-events-none absolute z-1 flex flex-wrap overflow-hidden">
+                    {compactLabels.map((line, index) => (
+                        <span
+                            key={`${line.label}-${index}`}
+                            className="bg-paper/85 px-1 font-code text-micro font-semibold whitespace-nowrap"
+                            style={{ color: line.color || LINE_TOKENS[index % LINE_TOKENS.length] }}
+                        >
+                            {line.label}
+                        </span>
+                    ))}
+                </div>
+            )}
+        </div>
     );
 }

@@ -529,12 +529,6 @@ textarea {
     box-shadow: none;
     overflow: hidden;
 }
-.ui-notice--danger {
-    border-left-color: var(--color-negative);
-}
-.ui-notice--primary {
-    border-left-color: var(--color-primary);
-}
 .ui-notice--neutral {
     border-left-color: var(--color-rule);
 }
@@ -542,6 +536,11 @@ textarea {
     border-color: color-mix(in srgb, var(--color-info) 42%, var(--color-rule-soft));
     border-left-color: var(--color-info);
     background: var(--color-tint-info);
+}
+.ui-notice--success {
+    border-color: color-mix(in srgb, var(--color-ok) 42%, var(--color-rule-soft));
+    border-left-color: var(--color-ok);
+    background: var(--color-tint-ok);
 }
 .ui-notice--warning {
     border-color: color-mix(in srgb, var(--color-ochre) 42%, var(--color-rule-soft));
@@ -557,17 +556,14 @@ textarea {
     background: var(--color-paper) !important;
     border-bottom: 0;
 }
-.ui-notice--danger .ui-notice-band {
-    color: var(--color-negative-2) !important;
-}
-.ui-notice--primary .ui-notice-band {
-    color: var(--color-primary-2) !important;
-}
 .ui-notice--neutral .ui-notice-band {
     color: var(--color-ink) !important;
 }
 .ui-notice--info .ui-notice-band {
     color: var(--color-info-2) !important;
+}
+.ui-notice--success .ui-notice-band {
+    color: var(--color-ok-2) !important;
 }
 .ui-notice--warning .ui-notice-band {
     color: var(--color-tint-warn-ink) !important;
@@ -576,6 +572,7 @@ textarea {
     color: var(--color-negative-2) !important;
 }
 .ui-notice--info > div:last-child,
+.ui-notice--success > div:last-child,
 .ui-notice--warning > div:last-child,
 .ui-notice--error > div:last-child {
     background: transparent;
@@ -601,17 +598,20 @@ textarea {
     border-color: var(--color-rule-soft);
     box-shadow: var(--shadow-sm);
 }
-.ui-statusbox--default {
-    border-left-color: var(--color-primary);
+.ui-statusbox--neutral {
+    border-left-color: var(--color-rule);
 }
-.ui-statusbox--ok {
+.ui-statusbox--info {
+    border-left-color: var(--color-info);
+}
+.ui-statusbox--success {
     border-left-color: var(--color-ok);
 }
-.ui-statusbox--err {
-    border-left-color: var(--color-negative);
-}
-.ui-statusbox--warn {
+.ui-statusbox--warning {
     border-left-color: var(--color-ochre);
+}
+.ui-statusbox--error {
+    border-left-color: var(--color-negative);
 }
 
 /* ── Switch (ui-switch-track / ui-switch-thumb) → vermilion ON track,
