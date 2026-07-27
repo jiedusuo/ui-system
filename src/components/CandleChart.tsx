@@ -222,6 +222,10 @@ export function CandleChart({
     // Marker-id → tooltip text for the crosshair hover handler (set by the
     // data effect, read by the build effect's subscription).
     const markerTipsRef = useRef<Map<string, string>>(new Map());
+    // Whether any markers are set (set by the data effect, read by the build
+    // effect's autoscale provider): a markerless chart must not reserve
+    // marker headroom.
+    const hasMarkersRef = useRef(false);
 
     // Build the chart once.
     useEffect(() => {
@@ -278,13 +282,23 @@ export function CandleChart({
         // per-marker `size`), so a wide fitted viewport with a few arrow
         // markers squashes the candles into a sliver — the library reserves
         // 100px+ of pane for the arrows. Keep the data-driven price range but
-        // pin the margins to fixed sane pixels; a marker at the extreme bar
-        // may slightly overlap the pane edge, which reads fine.
+        // pin the margins to sane pixels; a marker at the extreme bar may
+        // slightly overlap the pane edge, which reads fine. Without markers
+        // there is nothing to reserve headroom for, and on short panes the
+        // pixel caps shrink proportionally so a mini chart keeps its candles
+        // instead of its padding (`height` is the container, so the ratio is
+        // approximate — that's fine for headroom).
         const fixedMarkerMargins: AutoscaleInfoProvider = (orig) => {
             const info = orig();
-            if (!info) return info;
+            if (!info || !hasMarkersRef.current) return info;
             // Enough headroom for a focused (~2x) marker plus its label line.
-            return { priceRange: info.priceRange, margins: { above: 34, below: 22 } };
+            return {
+                priceRange: info.priceRange,
+                margins: {
+                    above: Math.min(34, Math.round(height * 0.16)),
+                    below: Math.min(22, Math.round(height * 0.1)),
+                },
+            };
         };
         const candle: ISeriesApi<"Candlestick" | "Bar" | "Line" | "Area"> =
             seriesType === "line"
@@ -554,6 +568,7 @@ export function CandleChart({
 
         // Event markers.
         const sorted = [...markers].sort((a, b) => a.ts - b.ts);
+        hasMarkersRef.current = sorted.length > 0;
         markerTipsRef.current = new Map(
             sorted.flatMap((m, i) => (m.tooltip ? [[`m${i}`, m.tooltip] as const] : [])),
         );
